@@ -16,14 +16,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
+import jdev.mentoria.lojavirtual.enums.TipoPessoa;
 import jdev.mentoria.lojavirtual.model.Endereco;
 import jdev.mentoria.lojavirtual.model.PessoaFisica;
 import jdev.mentoria.lojavirtual.model.PessoaJuridica;
 import jdev.mentoria.lojavirtual.model.dto.CepDTO;
+import jdev.mentoria.lojavirtual.model.dto.ConsultaCnpjDto;
 import jdev.mentoria.lojavirtual.repository.EnderecoRepository;
 import jdev.mentoria.lojavirtual.repository.PessoaFisicaRepository;
 import jdev.mentoria.lojavirtual.repository.PessoaRepository;
 import jdev.mentoria.lojavirtual.service.PessoaUserService;
+import jdev.mentoria.lojavirtual.service.ServiceContagemAcessoApi;
 import jdev.mentoria.lojavirtual.util.ValidaCNPJ;
 import jdev.mentoria.lojavirtual.util.ValidaCPF;
 
@@ -44,8 +47,7 @@ public class PessoaController {
 	private PessoaFisicaRepository pessoaFisicaRepository;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
+	private ServiceContagemAcessoApi serviceContagemAcessoApi;
 	
 	
 	@ResponseBody
@@ -57,7 +59,8 @@ public class PessoaController {
 				.pesquisaPorNomePF(nome.trim().toUpperCase());
 		
 		
-		jdbcTemplate.execute("begin; update tabela_acesso_end_potin set qtde_acesso_end_point = qtde_acesso_end_point + 1 where nome_end_point = 'END-POINT-NOME-PESSOA-FISICA'; commit");
+		
+		serviceContagemAcessoApi.atualizaAcessoEndPointPF();
 		
 		return new ResponseEntity<
 				List<PessoaFisica>>(fisicas, HttpStatus.OK);
@@ -118,6 +121,14 @@ public class PessoaController {
 	
 	
 	@ResponseBody
+	@GetMapping(value = "**/consultaCnpjReceitaWs/{cnpj}")
+	public ResponseEntity<ConsultaCnpjDto> consultaCnpjReceitaWs(@PathVariable("cnpj") String cnpj) {
+			
+		return new ResponseEntity<ConsultaCnpjDto>(pessoaUserService.consultaCnpjReceitaWS(cnpj), HttpStatus.OK);
+	}
+	
+	
+	@ResponseBody
 	@PostMapping(value = "**/salvarPj")
 	public ResponseEntity<PessoaJuridica> salvarPj(
 			@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionMentoriaJava {
@@ -125,6 +136,11 @@ public class PessoaController {
 		if(pessoaJuridica == null) {
 			throw new ExceptionMentoriaJava("Pessoa juridica nao pode ser NULL");
 		}
+		
+		if(pessoaJuridica.getTipoPessoa() == null) {
+			throw new ExceptionMentoriaJava("Informe o tipo Juridico ou Fornecedor");
+		}
+		
 		
 		if (pessoaJuridica.getId() == null && pessoaRepository
 				.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
@@ -219,6 +235,14 @@ public class PessoaController {
 		if(pessoaFisica == null) {
 			throw new ExceptionMentoriaJava("Pessoa fisica nao pode ser NULL");
 		}
+		
+		
+		
+		if(pessoaFisica.getTipoPessoa() == null) {
+			pessoaFisica.setTipoPessoa(TipoPessoa.FISICA.name());
+		}
+		
+		
 		
 		if (pessoaFisica.getId() == null && pessoaRepository
 				.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
