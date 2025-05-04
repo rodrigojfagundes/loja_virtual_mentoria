@@ -10,75 +10,75 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
 @Entity
-@Table(name="nota_item_produto")
-@SequenceGenerator(name = "seq_nota_item_produto", 
-sequenceName = "seq_nota_item_produto", allocationSize = 1, initialValue = 1)
-public class NotaItemProduto implements Serializable {
-	
+@Table(name="nota_fiscal_venda")
+@SequenceGenerator(name = "seq_nota_fiscal_venda", 
+sequenceName = "seq_nota_fiscal_venda", allocationSize = 1, initialValue = 1)
+public class NotaFiscalVenda implements Serializable{
+
 	private static final long serialVersionUID = 1L;
-	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	generator = "seq_nota_item_produto")
+	generator = "seq_nota_fiscal_venda")
 	private Long id;
-	@Column(nullable = false)
-	private Double quantity;
+	private String numero;
+	private String serie;
+	private String tipo;
+	@Column(columnDefinition = "text")
+	private String xml;
+	@Column(columnDefinition = "text")
+	private String pdf;
 	
 	
-	@ManyToOne
-	@JoinColumn(name = "nota_fiscal_compra_id", nullable = false,
+	@OneToOne
+	@JoinColumn(name = "venda_compra_loja_virtual_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
-	name = "nota_fiscal_compra_fk"))	
-	private NotaFiscalCompra notaFiscalCompra;
-		
+	name = "venda_compra_loja_virtual_fk"))	
+	private VendaCompraLojaVirtual vendaCompraLojaVirtual;
 	
-	@ManyToOne
-	@JoinColumn(name = "produto_id", nullable = false,
-	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
-	name = "produto_fk"))
-	private Produto produto;
-
 	
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public Double getQuantity() {
-		return quantity;
+	public String getNumero() {
+		return numero;
 	}
-
-	public void setQuantity(Double quantity) {
-		this.quantity = quantity;
+	public void setNumero(String numero) {
+		this.numero = numero;
 	}
-
-	public NotaFiscalCompra getNotaFiscalCompra() {
-		return notaFiscalCompra;
+	public String getSerie() {
+		return serie;
 	}
-
-	public void setNotaFiscalCompra(NotaFiscalCompra notaFiscalCompra) {
-		this.notaFiscalCompra = notaFiscalCompra;
+	public void setSerie(String serie) {
+		this.serie = serie;
 	}
-
-	public Produto getProduto() {
-		return produto;
+	public String getTipo() {
+		return tipo;
 	}
-
-	public void setProduto(Produto produto) {
-		this.produto = produto;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
-	
-
+	public String getXml() {
+		return xml;
+	}
+	public void setXml(String xml) {
+		this.xml = xml;
+	}
+	public String getPdf() {
+		return pdf;
+	}
+	public void setPdf(String pdf) {
+		this.pdf = pdf;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -86,7 +86,6 @@ public class NotaItemProduto implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -95,7 +94,7 @@ public class NotaItemProduto implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NotaItemProduto other = (NotaItemProduto) obj;
+		NotaFiscalVenda other = (NotaFiscalVenda) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -103,8 +102,6 @@ public class NotaItemProduto implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
 	
 	
 	
