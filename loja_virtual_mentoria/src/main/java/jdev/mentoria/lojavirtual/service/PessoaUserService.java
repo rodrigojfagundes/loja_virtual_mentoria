@@ -192,24 +192,23 @@ public class PessoaUserService {
 		
 	}
 	
+	public CepDTO consultaCep(String cep) {
 		
 		
-		public CepDTO consultaCep(String cep) {
-			
-			
-			
+		
+		return new RestTemplate().getForEntity(
+				"https://viacep.com.br/ws/" + cep +"/json/", CepDTO.class).getBody();
+	}
+	
+	public ConsultaCnpjDto consultaCnpjReceitaWS(String cnpj) {
+		
+		
+		
 			return new RestTemplate().getForEntity(
-					"https://viacep.com.br/ws/" + cep +"/json/", CepDTO.class).getBody();
-		}
-		
-		public ConsultaCnpjDto consultaCnpjReceitaWS(String cnpj) {
-			
-			
-			
-				return new RestTemplate().getForEntity(
-						"https://receitaws.com.br/v1/cnpj/" + cnpj, ConsultaCnpjDto.class).getBody();
-		
-		}
+					"https://receitaws.com.br/v1/cnpj/" + cnpj, ConsultaCnpjDto.class).getBody();
+	
+	}
+
 	
 	
 }

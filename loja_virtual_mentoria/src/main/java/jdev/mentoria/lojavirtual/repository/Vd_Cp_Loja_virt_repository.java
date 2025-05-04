@@ -1,5 +1,6 @@
 package jdev.mentoria.lojavirtual.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,20 @@ public interface Vd_Cp_Loja_virt_repository extends JpaRepository<VendaCompraLoj
 			+ " where i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.enderecoEntrega.ruaLogra)) "
 			+ " like %?1%")
 	List<VendaCompraLojaVirtual> vendaPorEnderecoEntrega(String enderecoentrega);
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
