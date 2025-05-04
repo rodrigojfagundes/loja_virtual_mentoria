@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 
@@ -30,32 +32,41 @@ public class Produto implements Serializable {
 	generator = "seq_produto")
 	private Long id;
 	
+	@NotNull(message = "O tipo da unidade deve ser informado")
 	@Column(nullable = false)
 	private String tipoUnidade;
 	
+	@Size(min = 10, message = "Nome do produto deve ter mais de 10 letras")
+	@NotNull(message = "Nome do produto deve ser informado")
 	@Column(nullable = false)
 	private String nome;
 	
 	@Column(nullable = false)
 	private Boolean ativo = Boolean.TRUE;
 	
+	@NotNull(message = "Descricao do produto deve ser informada")
 	@Column(columnDefinition = "text", length = 2000, nullable = false)
 	private String descricao;
 			
 	/**Nota item nota produto - ASSOCIAR**/
 	
+	@NotNull(message = "O peso do produto deve ser informado")
 	@Column(nullable = false)
 	private Double peso;
 	
+	@NotNull(message = "Largura deve ser informada")
 	@Column(nullable = false)
 	private Double largura;
 	
+	@NotNull(message = "Altura deve ser informada")
 	@Column(nullable = false)
 	private Double altura;
 	
+	@NotNull(message = "Profundidade deve ser informado")
 	@Column(nullable = false)
 	private Double profundidade;
 	
+	@NotNull(message = "Quantidade de estoque deve ser informado")
 	@Column(nullable = false)
 	private BigDecimal valorVenda = BigDecimal.ZERO;
 	
@@ -72,18 +83,78 @@ public class Produto implements Serializable {
 	
 	
 	
+	
+	
+	
+	
+	
+	@NotNull(message = "A empresa responsavel deve ser informada")
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
 	name = "empresa_id_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
+	
+	
+	
+	
+	@NotNull(message = "A CategoriaProduto deve ser informada")
+	@ManyToOne(targetEntity = CategoriaProduto.class)
+	@JoinColumn(name = "categoria_produto_id", nullable = false,
+	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
+	name = "categoria_produto_id_fk"))
+	private CategoriaProduto categoriaProduto = new CategoriaProduto();
 
 	
-	public Pessoa getEmpresa() {
+	
+	
+	@NotNull(message = "A MarcaProduto deve ser informada")
+	@ManyToOne(targetEntity = MarcaProduto.class)
+	@JoinColumn(name = "marca_produto_id", nullable = false,
+	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
+	name = "marca_produto_id_fk"))
+	private MarcaProduto marcaProduto = new MarcaProduto();
+	
+
+	
+	
+	@NotNull(message = "A NotaItem deve ser informada")
+	@ManyToOne(targetEntity = NotaItemProduto.class)
+	@JoinColumn(name = "nota_item_produto_id", nullable = false,
+	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
+	name = "nota_item_produto_id_fk"))
+	private NotaItemProduto notaItemProduto = new NotaItemProduto();
+	
+	
+	public void setNotaItemProduto(NotaItemProduto notaItemProduto) {
+		this.notaItemProduto = notaItemProduto;
+	}
+	
+	public NotaItemProduto getNotaItemProduto() {
+		return notaItemProduto;
+	}
+	
+	public void setMarcaProduto(MarcaProduto marcaProduto) {
+		this.marcaProduto = marcaProduto;
+	}
+	
+	public MarcaProduto getMarcaProduto() {
+		return marcaProduto;
+	}
+	
+	public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
+		this.categoriaProduto = categoriaProduto;
+	}
+	
+	public CategoriaProduto getCategoriaProduto() {
+		return categoriaProduto;
+	}
+	
+	public PessoaJuridica getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
+	public void setEmpresa(PessoaJuridica empresa) {
 		this.empresa = empresa;
 	}
 
