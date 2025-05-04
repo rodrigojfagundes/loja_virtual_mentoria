@@ -192,7 +192,6 @@ public class PessoaUserService {
 		
 	}
 	
-	
 	public CepDTO consultaCep(String cep) {
 		
 		
@@ -210,6 +209,10 @@ public class PessoaUserService {
 	
 	}
 
+	
+	
+	
+	
 	
 	
 }
