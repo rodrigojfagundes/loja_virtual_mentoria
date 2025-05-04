@@ -16,6 +16,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 
+
+
+
+
+
 @Entity
 @Table(name="nota_item_produto")
 @SequenceGenerator(name = "seq_nota_item_produto", 
