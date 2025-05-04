@@ -118,21 +118,23 @@ public class Produto implements Serializable {
 
 	
 	
-	@NotNull(message = "A NotaItem deve ser informada")
-	@ManyToOne(targetEntity = NotaItemProduto.class)
-	@JoinColumn(name = "nota_item_produto_id", nullable = false,
-	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
-	name = "nota_item_produto_id_fk"))
-	private NotaItemProduto notaItemProduto = new NotaItemProduto();
 	
 	
-	public void setNotaItemProduto(NotaItemProduto notaItemProduto) {
-		this.notaItemProduto = notaItemProduto;
-	}
 	
-	public NotaItemProduto getNotaItemProduto() {
-		return notaItemProduto;
-	}
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public void setMarcaProduto(MarcaProduto marcaProduto) {
 		this.marcaProduto = marcaProduto;
