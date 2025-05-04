@@ -32,7 +32,7 @@ public class LojaVirtualMentoriaApplication implements AsyncConfigurer{
 
 	public static void main(String[] args) {
 		
-
+		
 		
 		SpringApplication.run(LojaVirtualMentoriaApplication.class, args);
 	}
