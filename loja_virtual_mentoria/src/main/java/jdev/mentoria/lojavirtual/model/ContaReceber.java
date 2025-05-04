@@ -1,6 +1,8 @@
 package jdev.mentoria.lojavirtual.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
@@ -14,32 +16,41 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import jdev.mentoria.lojavirtual.enums.TipoEndereco;
+import jdev.mentoria.lojavirtual.enums.StatusContaReceber;
 
 
 
 
 @Entity
-@Table(name="endereco")
-@SequenceGenerator(name = "seq_endereco", 
-sequenceName = "seq_endereco", allocationSize = 1, initialValue = 1)
-public class Endereco implements Serializable {
+@Table(name="conta_receber")
+@SequenceGenerator(name = "seq_conta_receber", 
+sequenceName = "seq_conta_receber", allocationSize = 1, initialValue = 1)
+public class ContaReceber implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	generator = "seq_endereco")
+	generator = "seq_conta_receber")
 	private Long id;
+			
+	private String descricao;
 	
-	private String ruaLogra;
-	private String cep;
-	private String numero;
-	private String complemento;
-	private String bairro;
-	private String uf;
-	private String cidade;
+	@Enumerated(EnumType.STRING)
+	private StatusContaReceber status;
+	
+	@Temporal(TemporalType.DATE)
+	private Date dtVencimento;
+	
+	@Temporal(TemporalType.DATE)
+	private Date dtPagamento;
+	
+	private BigDecimal valorTotal;
+	
+	private BigDecimal valorDesconto;
 	
 	
 	@ManyToOne(targetEntity = Pessoa.class)
@@ -47,10 +58,7 @@ public class Endereco implements Serializable {
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, 
 	name = "pessoa_fk"))
 	private Pessoa pessoa;
-	
-	@Enumerated(EnumType.STRING)
-	private TipoEndereco tipoEndereco;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -59,60 +67,52 @@ public class Endereco implements Serializable {
 		this.id = id;
 	}
 
-	public String getRuaLogra() {
-		return ruaLogra;
+	public String getDescricao() {
+		return descricao;
 	}
 
-	public void setRuaLogra(String ruaLogra) {
-		this.ruaLogra = ruaLogra;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
-	public String getCep() {
-		return cep;
+	public StatusContaReceber getStatus() {
+		return status;
 	}
 
-	public void setCep(String cep) {
-		this.cep = cep;
+	public void setStatus(StatusContaReceber status) {
+		this.status = status;
 	}
 
-	public String getNumero() {
-		return numero;
+	public Date getDtVencimento() {
+		return dtVencimento;
 	}
 
-	public void setNumero(String numero) {
-		this.numero = numero;
+	public void setDtVencimento(Date dtVencimento) {
+		this.dtVencimento = dtVencimento;
 	}
 
-	public String getComplemento() {
-		return complemento;
+	public Date getDtPagamento() {
+		return dtPagamento;
 	}
 
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
+	public void setDtPagamento(Date dtPagamento) {
+		this.dtPagamento = dtPagamento;
 	}
 
-	public String getBairro() {
-		return bairro;
+	public BigDecimal getValorTotal() {
+		return valorTotal;
 	}
 
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
 	}
 
-	public String getUf() {
-		return uf;
+	public BigDecimal getValorDesconto() {
+		return valorDesconto;
 	}
 
-	public void setUf(String uf) {
-		this.uf = uf;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
+	public void setValorDesconto(BigDecimal valorDesconto) {
+		this.valorDesconto = valorDesconto;
 	}
 
 	public Pessoa getPessoa() {
@@ -121,14 +121,6 @@ public class Endereco implements Serializable {
 
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
-	}
-	
-	public TipoEndereco getTipoEndereco() {
-		return tipoEndereco;
-	}
-
-	public void setTipoEndereco(TipoEndereco tipoEndereco) {
-		this.tipoEndereco = tipoEndereco;
 	}
 
 	@Override
@@ -147,7 +139,7 @@ public class Endereco implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Endereco other = (Endereco) obj;
+		ContaReceber other = (ContaReceber) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -155,6 +147,7 @@ public class Endereco implements Serializable {
 			return false;
 		return true;
 	}
+	
 	
 	
 	
