@@ -313,7 +313,7 @@ public class Vd_Cp_loja_Virt_Controller {
 		
 		compraLojaVirtual = vendaService
 				.consultaVendaFaixaData(data1, data2);
-		
+
 		
 		
 		

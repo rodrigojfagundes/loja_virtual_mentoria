@@ -1,6 +1,8 @@
 package jdev.mentoria.lojavirtual.service;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import jdev.mentoria.lojavirtual.model.VendaCompraLojaVirtual;
+import jdev.mentoria.lojavirtual.repository.Vd_Cp_Loja_virt_repository;
 
 
 @Service
@@ -24,6 +27,10 @@ public class VendaService {
 	
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private Vd_Cp_Loja_virt_repository vd_Cp_Loja_virt_repository;
+	
 	
 	
 	public void exclusaoTotalVendaBanco2(Long idVenda) {
@@ -74,21 +81,15 @@ public class VendaService {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	@SuppressWarnings("unchecked")
-	public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2){
-	String sql = "select distinct (i.vendaCompraLojaVirtual) from ItemVendaLoja i "
-			+ " where i.vendaCompraLojaVirtual.excluido = false "
-			+ " and i.vendaCompraLojaVirtual.dataVenda >= '" + data1 + "'"
-			+ " and i.vendaCompraLojaVirtual.dataVenda <= '" + data2 + "' ";
+	public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2) throws ParseException{
 		
-	return entityManager.createQuery(sql).getResultList();
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Date date1 = dateFormat.parse(data1);
+		Date date2 = dateFormat.parse(data2);
+		
+		
+	return vd_Cp_Loja_virt_repository.consultaVendaFaixaData(date1, date2);
 	}
 }

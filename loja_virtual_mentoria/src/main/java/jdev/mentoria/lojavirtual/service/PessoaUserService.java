@@ -208,7 +208,6 @@ public class PessoaUserService {
 					"https://receitaws.com.br/v1/cnpj/" + cnpj, ConsultaCnpjDto.class).getBody();
 	
 	}
-
 	
 	
 }
