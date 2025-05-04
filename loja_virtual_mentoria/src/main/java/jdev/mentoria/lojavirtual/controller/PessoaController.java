@@ -41,6 +41,15 @@ public class PessoaController {
 		}
 		
 		
+		if (pessoaJuridica.getId() == null && pessoaRepository
+				.existeInsEstadualCadastrado(pessoaJuridica.getInscEstadual()) != null) {
+			
+			throw new ExceptionMentoriaJava(""
+					+ "Ja existe Inscricao Estadual cadastrado com o numero: " + pessoaJuridica.getInscEstadual());
+		}
+		
+		
+		
 		 pessoaJuridica = pessoaUserService
 				 .salvarPessoaJuridica(pessoaJuridica);
 		
