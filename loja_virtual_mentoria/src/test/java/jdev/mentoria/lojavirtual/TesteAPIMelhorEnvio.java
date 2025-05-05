@@ -20,31 +20,25 @@ public class TesteAPIMelhorEnvio {
 	public static void main(String[] args) throws Exception {
 		
 		
-		OkHttpClient client = new OkHttpClient().newBuilder().build();
+		
+		
+		OkHttpClient client = new OkHttpClient();
 
-		
-		
-		
-		
-		
-		
-		
-		
 		MediaType mediaType = MediaType.parse("application/json");
-		RequestBody body = RequestBody.create(mediaType, "{\"from\":{\"postal_code\":\"96020360\"},\"to\":{\"postal_code\":\"01018020\"},\"products\":[{\"id\":\"x\",\"width\":11,\"height\":17,\"length\":11,\"weight\":0.3,\"insurance_value\":10.1,\"quantity\":1},{\"id\":\"y\",\"width\":16,\"height\":25,\"length\":11,\"weight\":0.3,\"insurance_value\":55.05,\"quantity\":2},{\"id\":\"z\",\"width\":22,\"height\":30,\"length\":11,\"weight\":1,\"insurance_value\":30,\"quantity\":1}]}");
+		RequestBody body = RequestBody.create(mediaType, "{\"mode\":\"private\",\"orders\":[\"9e55f440-38c6-4491-8884-18dae893ae58\"]}");
 		Request request = new Request.Builder()
-		  .url("https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate")
-		  .method("POST", body)
-		  
+		  .url("https://sandbox.melhorenvio.com.br/api/v2/me/shipment/print")
+		  .post(body)
 		  .addHeader("Accept", "application/json")
 		  .addHeader("Content-Type", "application/json")
-		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
+		  .addHeader("Authorization", "Bearer Token_API_Melhor_Envio")
 		  .addHeader("User-Agent", "rodrigojosefagundes@gmail.com")
 		  .build();
 
 		Response response = client.newCall(request).execute();
 		
 		
+		System.out.println(response.body().string());
 		
 		
 		
@@ -55,148 +49,68 @@ public class TesteAPIMelhorEnvio {
 		
 		
 		
-		JsonNode jsonNode = new ObjectMapper()
-				.readTree(response.body().string());
-		
-		
-		
-		
-		Iterator<JsonNode> iterator = jsonNode.iterator();
 		
 		
 		
 		
 		
 		
-		List<EmpresaTransporteDTO> empresaTransporteDTOs = new ArrayList<EmpresaTransporteDTO>();
 		
 		
 		
 		
-		
-		while(iterator.hasNext()) {
-			JsonNode node = iterator.next();
-			
-		
-			
-			
-			
-			
-			
-			EmpresaTransporteDTO empresaTransporteDTO = new EmpresaTransporteDTO();
-			if(node.get("id") != null) {
-				empresaTransporteDTO.setId(node.get("id").asText());
-				
-			}
 
-			
-			
-			
-			if(node.get("name") != null) {
-				empresaTransporteDTO.setNome(node.get("name").asText());
-			}					
-			
-			if(node.get("price") != null) {
-			empresaTransporteDTO.setValor(node.get("price").asText());
-		}
-			
-			if(node.get("company") != null) {				
-			empresaTransporteDTO.setEmpresa(node.get("company").asText());
-			empresaTransporteDTO.setPicture(node.get("company").get("picture").asText());
-		}
-			
-			
-			
-			
-			if(empresaTransporteDTO.dadosOK()) {
-				empresaTransporteDTOs.add(empresaTransporteDTO);
-			}			
 		
-	}
-		System.out.println(empresaTransporteDTOs);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
-		
-		
-		
-		
-		
-
-
-		
-		
-		
-		
-		
-
-		
-		
-		
-
-		
-		
-		
-		
-		
-		
-
-
-			
-			
-
-			
-			
-			
-			
-			
-			
-
-
-				
-
-			
-			
-			
-			
-
-
-
-
-
-
-
-			
-
-
-
-
-			
-			
-			
-			
-			
-
-
-
-
-		
-
-		
-
-
