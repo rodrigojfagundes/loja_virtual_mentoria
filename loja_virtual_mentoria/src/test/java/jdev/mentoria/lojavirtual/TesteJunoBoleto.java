@@ -17,6 +17,14 @@ public class TesteJunoBoleto extends TestCase {
 	private ServiceJunoBoleto serviceJunoBoleto;
 
 	@Test
+	public void testcriarChavePixAsaas() throws Exception {
+		String chaveApi = serviceJunoBoleto.criarChavePixAsaas();
+
+		System.out.println("Chave Asaas API" + chaveApi);
+
+	}
+
+	@Test
 	public void deleteWebHook() throws Exception {
 
 		serviceJunoBoleto.deleteWebHook("wbh_E71095B5BF65E8D2DB018EE8A89BACB8");

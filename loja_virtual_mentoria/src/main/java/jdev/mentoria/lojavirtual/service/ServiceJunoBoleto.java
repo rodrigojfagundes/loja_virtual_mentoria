@@ -24,6 +24,7 @@ import jdev.mentoria.lojavirtual.enums.ApiTokenIntegracao;
 import jdev.mentoria.lojavirtual.model.AccessTokenJunoAPI;
 import jdev.mentoria.lojavirtual.model.BoletoJuno;
 import jdev.mentoria.lojavirtual.model.VendaCompraLojaVirtual;
+import jdev.mentoria.lojavirtual.model.dto.AsaasApiPagamentoStatus;
 import jdev.mentoria.lojavirtual.model.dto.BoletoGeradoApiJuno;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaJunoAPI;
 import jdev.mentoria.lojavirtual.model.dto.ConteudoBoletoJuno;
@@ -49,6 +50,27 @@ public class ServiceJunoBoleto implements Serializable {
 
 	@Autowired
 	private BoletoJunoRepository boletoJunoRepository;
+
+	/**
+	 * Cria a chave da API Asass para o PIX;
+	 * 
+	 * @return Chave
+	 */
+	public String criarChavePixAsaas() throws Exception {
+
+		Client client = new HostIgnoringCliente(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringCliente();
+
+		WebResource webResource = client.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "pix/addressKeys");
+
+		ClientResponse clientResponse = webResource.accept("application/json;charset=UTF-8")
+				.header("Content-Type", "application/json").header("access_token", AsaasApiPagamentoStatus.API_KEY)
+				.post(ClientResponse.class, "{\"type\":\"EVP\"}");
+
+		String strinRetorno = clientResponse.getEntity(String.class);
+		clientResponse.close();
+		return strinRetorno;
+
+	}
 
 	public String cancelarBoleto(String code) throws Exception {
 
