@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 
 
 @Entity
@@ -33,17 +35,18 @@ public class CupDesc implements Serializable {
 	generator = "seq_cup_desc")
 	private Long id;
 	
+	@NotEmpty(message = "Informe o codigo do desconto")
 	@Column(nullable = false)
 	private String codDesc;
-	
 	
 	private BigDecimal valorRealDesc;
 	private BigDecimal valorPorcentDesc;
 	
+	@NotEmpty(message = "Informe a data de validade do cupom")
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataValidadeCupom;
-	
+			
 	
 	
 	@ManyToOne(targetEntity = PessoaJuridica.class)
