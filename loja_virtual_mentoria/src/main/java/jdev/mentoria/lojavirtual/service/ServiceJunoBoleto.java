@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -28,6 +29,7 @@ import jdev.mentoria.lojavirtual.model.BoletoJuno;
 import jdev.mentoria.lojavirtual.model.VendaCompraLojaVirtual;
 import jdev.mentoria.lojavirtual.model.dto.AsaasApiPagamentoStatus;
 import jdev.mentoria.lojavirtual.model.dto.BoletoGeradoApiJuno;
+import jdev.mentoria.lojavirtual.model.dto.ClienteAsaasApiPagamento;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaJunoAPI;
 import jdev.mentoria.lojavirtual.model.dto.ConteudoBoletoJuno;
 import jdev.mentoria.lojavirtual.model.dto.CriarWebHook;
@@ -35,6 +37,7 @@ import jdev.mentoria.lojavirtual.model.dto.ObjetoPostCarneJuno;
 import jdev.mentoria.lojavirtual.repository.AccesTokenJunoRepository;
 import jdev.mentoria.lojavirtual.repository.BoletoJunoRepository;
 import jdev.mentoria.lojavirtual.repository.Vd_Cp_Loja_virt_repository;
+import jdev.mentoria.lojavirtual.util.ValidaCPF;
 
 @Service
 public class ServiceJunoBoleto implements Serializable {
@@ -78,11 +81,46 @@ public class ServiceJunoBoleto implements Serializable {
 
 		clientResponse.close();
 
-		Integer total = Integer.parseInt(parser.get("totalParser").toString());
+		Integer total = Integer.parseInt(parser.get("totalCount").toString());
 
 		/* criar cliente */
 		if (total <= 0) {
 
+			ClienteAsaasApiPagamento clienteAsaasApiPagamento = new ClienteAsaasApiPagamento();
+
+			if (!ValidaCPF.isCPF(dados.getPayerCpfCnpj())) {
+
+				clienteAsaasApiPagamento.setCpfCnpj("60051803046");
+			} else {
+
+				clienteAsaasApiPagamento.setCpfCnpj(dados.getPayerCpfCnpj());
+			}
+
+			clienteAsaasApiPagamento.setEmail(dados.getEmail());
+			clienteAsaasApiPagamento.setName(dados.getPayerName());
+			clienteAsaasApiPagamento.setPhone(dados.getPayerPhone());
+
+			Client client2 = new HostIgnoringCliente(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringCliente();
+
+			WebResource webResource2 = client2.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "customers");
+
+			ClientResponse clientResponse2 = webResource2.accept("application/json;charset=UTF-8")
+					.header("Content-Type", "application/json").header("access_token", AsaasApiPagamentoStatus.API_KEY)
+					.post(ClientResponse.class, new ObjectMapper().writeValueAsBytes(clienteAsaasApiPagamento));
+
+			LinkedHashMap<String, Object> parser2 = new JSONParser(clientResponse2.getEntity(String.class))
+					.parseObject();
+			clientResponse2.close();
+
+			customer_id = parser2.get("id").toString();
+
+		} else {
+			/* Já tem cliente cadastrado */
+
+			List<Object> data = (List<Object>) parser.get("data");
+
+			customer_id = new Gson().toJsonTree(data.get(0)).getAsJsonObject().get("id").toString().replaceAll("\"",
+					"");
 		}
 
 		return customer_id;

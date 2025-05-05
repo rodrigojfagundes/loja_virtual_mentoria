@@ -1,4 +1,4 @@
-package jdev.mentoria.lojavirtual;
+package lojavirtual;
 
 import jdev.mentoria.lojavirtual.util.ValidaCNPJ;
 import jdev.mentoria.lojavirtual.util.ValidaCPF;
