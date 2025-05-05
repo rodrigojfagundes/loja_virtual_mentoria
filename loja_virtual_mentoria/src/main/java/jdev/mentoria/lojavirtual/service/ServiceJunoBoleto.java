@@ -5,11 +5,13 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +52,42 @@ public class ServiceJunoBoleto implements Serializable {
 
 	@Autowired
 	private BoletoJunoRepository boletoJunoRepository;
+
+	/**
+	 * retorna o id do customer/cliente/pessoa
+	 * 
+	 * @throws Exception
+	 */
+	public String buscaClientePessoaApiAsaas(ObjetoPostCarneJuno dados) throws Exception {
+
+		/* id do cliente para ligar com a cobranca */
+		String customer_id = "";
+
+		/* criando/iniciando consultando o cliente */
+
+		Client client = new HostIgnoringCliente(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringCliente();
+
+		WebResource webResource = client
+				.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "customers?email=" + dados.getEmail());
+
+		ClientResponse clientResponse = webResource.accept("application/json;charset=UTF-8")
+				.header("Content-Type", "application/json").header("access_token", AsaasApiPagamentoStatus.API_KEY)
+				.get(ClientResponse.class);
+
+		LinkedHashMap<String, Object> parser = new JSONParser(clientResponse.getEntity(String.class)).parseObject();
+
+		clientResponse.close();
+
+		Integer total = Integer.parseInt(parser.get("totalParser").toString());
+
+		/* criar cliente */
+		if (total <= 0) {
+
+		}
+
+		return customer_id;
+
+	}
 
 	/**
 	 * Cria a chave da API Asass para o PIX;
