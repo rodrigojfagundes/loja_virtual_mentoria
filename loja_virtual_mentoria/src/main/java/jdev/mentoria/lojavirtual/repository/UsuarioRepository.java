@@ -16,7 +16,7 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long>{
 	
 	
 	
-	@Query(value = "select u from Usuario u where u.dataAtualSenha <= current_date - 90")
+	@Query(value = "select u from Usuario u where u.dataAtualSenha <= current_date - 100")
 	List<Usuario> usuarioSenhaVencida();
 	
 	
