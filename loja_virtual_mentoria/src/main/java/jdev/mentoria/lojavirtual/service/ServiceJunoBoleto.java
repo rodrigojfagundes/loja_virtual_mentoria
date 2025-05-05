@@ -37,6 +37,7 @@ import jdev.mentoria.lojavirtual.model.dto.CobrancaJunoAPI;
 import jdev.mentoria.lojavirtual.model.dto.ConteudoBoletoJuno;
 import jdev.mentoria.lojavirtual.model.dto.CriarWebHook;
 import jdev.mentoria.lojavirtual.model.dto.ObjetoPostCarneJuno;
+import jdev.mentoria.lojavirtual.model.dto.ObjetoQrCodePixAsaas;
 import jdev.mentoria.lojavirtual.repository.AccesTokenJunoRepository;
 import jdev.mentoria.lojavirtual.repository.BoletoJunoRepository;
 import jdev.mentoria.lojavirtual.repository.Vd_Cp_Loja_virt_repository;
@@ -256,6 +257,12 @@ public class ServiceJunoBoleto implements Serializable {
 			boletoJuno.setInstallmentLink(data.getInvoiceUrl());
 			boletoJuno.setRecorrencia(recorrencia);
 
+			ObjetoQrCodePixAsaas codePixAsaas = this.buscarQrCodeCodigoPix(data.getId());
+
+			boletoJuno.setPayloadInBase64(codePixAsaas.getPayload());
+
+			boletoJuno.setImageInBase64(codePixAsaas.getEncodedImage());
+
 			boletoJunos.add(boletoJuno);
 			recorrencia++;
 		}
@@ -264,6 +271,29 @@ public class ServiceJunoBoleto implements Serializable {
 
 		return boletoJunos.get(0).getCheckoutUrl();
 
+	}
+
+	public ObjetoQrCodePixAsaas buscarQrCodeCodigoPix(String idCobranca) throws Exception {
+
+		Client client = new HostIgnoringCliente(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringCliente();
+
+		WebResource webResource = client
+				.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "payments/" + idCobranca + "/pixQrCode");
+
+		ClientResponse clientResponse = webResource.accept("application/json;charset=UTF-8")
+				.header("Content-Type", "application/json").header("access_token", AsaasApiPagamentoStatus.API_KEY)
+				.get(ClientResponse.class);
+
+		String stringRetorno = clientResponse.getEntity(String.class);
+		clientResponse.close();
+
+		ObjetoQrCodePixAsaas codePixAsaas = new ObjetoQrCodePixAsaas();
+
+		LinkedHashMap<String, Object> parser = new JSONParser(stringRetorno).parseObject();
+		codePixAsaas.setEncodedImage(parser.get("encodedImage").toString());
+		codePixAsaas.setPayload(parser.get("payload").toString());
+
+		return codePixAsaas;
 	}
 
 	public String gerarCarneApi(ObjetoPostCarneJuno objetoPostCarneJuno) throws Exception {
