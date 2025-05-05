@@ -196,6 +196,19 @@ public class ServiceJunoBoleto implements Serializable {
 		cobrancaApiAsaas.getInterest().setValue(1F);
 		cobrancaApiAsaas.getFine().setValue(1F);
 
+		String json = new ObjectMapper().writeValueAsString(cobrancaApiAsaas);
+
+		Client client = new HostIgnoringCliente(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringCliente();
+
+		WebResource webResource = client.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "payments");
+
+		ClientResponse clientResponse = webResource.accept("application/json;charset=UTF-8")
+				.header("Content-Type", "application/json").header("access_token", AsaasApiPagamentoStatus.API_KEY)
+				.post(ClientResponse.class, json);
+
+		String stringRetorno = clientResponse.getEntity(String.class);
+		clientResponse.close();
+
 		return "";
 
 	}
