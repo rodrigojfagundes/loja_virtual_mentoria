@@ -133,7 +133,7 @@ public class VendaCompraLojaVirtual implements Serializable {
 	private PessoaJuridica empresa;
 	
 	@NotNull(message = "Status da venda ou compra deve ser informado")
-	@Column(nullable = false)
+	@Column(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private StatusVendaLojaVirtual statusVendaLojaVirtual;
 	
@@ -148,6 +148,59 @@ public class VendaCompraLojaVirtual implements Serializable {
 	
 	private Boolean excluido = Boolean.FALSE;
 	
+	
+	
+	
+	@Column(name = "codigo_etiqueta")
+	private String codigoEtiqueta;
+	
+	
+	
+	
+	@Column(name = "url_imprime_etiqueta")
+	private String urlImprimeEtiqueta;
+	
+	
+	
+	
+	
+	
+	private String servicoTransportadora;
+	
+	
+	
+	public StatusVendaLojaVirtual getStatusVendaLojaVirtual() {
+		return statusVendaLojaVirtual;
+	}
+
+	public void setStatusVendaLojaVirtual(StatusVendaLojaVirtual statusVendaLojaVirtual) {
+		this.statusVendaLojaVirtual = statusVendaLojaVirtual;
+	}
+
+	public String getCodigoEtiqueta() {
+		return codigoEtiqueta;
+	}
+
+	public void setCodigoEtiqueta(String codigoEtiqueta) {
+		this.codigoEtiqueta = codigoEtiqueta;
+	}
+
+	public String getUrlImprimeEtiqueta() {
+		return urlImprimeEtiqueta;
+	}
+
+	public void setUrlImprimeEtiqueta(String urlImprimeEtiqueta) {
+		this.urlImprimeEtiqueta = urlImprimeEtiqueta;
+	}
+
+	public String getServicoTransportadora() {
+		return servicoTransportadora;
+	}
+
+	public void setServicoTransportadora(String servicoTransportadora) {
+		this.servicoTransportadora = servicoTransportadora;
+	}
+
 	public void setExcluido(Boolean excluido) {
 		this.excluido = excluido;
 	}
