@@ -1,4 +1,4 @@
-package jdev.mentoria.lojavirtual;
+package jdev.mentoria.jdev.mentoria.lojavirtual;
 
 import java.util.ArrayList;
 import java.util.Iterator;
