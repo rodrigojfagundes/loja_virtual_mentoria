@@ -31,6 +31,8 @@ import jdev.mentoria.lojavirtual.model.dto.AsaasApiPagamentoStatus;
 import jdev.mentoria.lojavirtual.model.dto.BoletoGeradoApiJuno;
 import jdev.mentoria.lojavirtual.model.dto.ClienteAsaasApiPagamento;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaApiAsaas;
+import jdev.mentoria.lojavirtual.model.dto.CobrancaGeradaAsassApi;
+import jdev.mentoria.lojavirtual.model.dto.CobrancaGeradaAssasData;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaJunoAPI;
 import jdev.mentoria.lojavirtual.model.dto.ConteudoBoletoJuno;
 import jdev.mentoria.lojavirtual.model.dto.CriarWebHook;
@@ -143,9 +145,9 @@ public class ServiceJunoBoleto implements Serializable {
 				.header("Content-Type", "application/json").header("access_token", AsaasApiPagamentoStatus.API_KEY)
 				.post(ClientResponse.class, "{\"type\":\"EVP\"}");
 
-		String strinRetorno = clientResponse.getEntity(String.class);
+		String stringRetorno = clientResponse.getEntity(String.class);
 		clientResponse.close();
-		return strinRetorno;
+		return stringRetorno;
 
 	}
 
@@ -209,7 +211,58 @@ public class ServiceJunoBoleto implements Serializable {
 		String stringRetorno = clientResponse.getEntity(String.class);
 		clientResponse.close();
 
-		return "";
+		/*
+		 * Buscando parcelas geradas - para salvar elas no BANCO da LOJAVIRTUALMENTORIA
+		 */
+
+		LinkedHashMap<String, Object> parser = new JSONParser(stringRetorno).parseObject();
+		String installment = parser.get("installment").toString();
+
+		Client client2 = new HostIgnoringCliente(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringCliente();
+		WebResource webResource2 = client2
+				.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "payments?installment=" + installment);
+
+		ClientResponse clientResponse2 = webResource2.accept("application/json;charset=UTF-8")
+				.header("Content-Type", "application/json").header("access_token", AsaasApiPagamentoStatus.API_KEY)
+				.get(ClientResponse.class);
+
+		String retornoCobrancas = clientResponse2.getEntity(String.class);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+		CobrancaGeradaAsassApi listaCobranca = objectMapper.readValue(retornoCobrancas,
+				new TypeReference<CobrancaGeradaAsassApi>() {
+				});
+
+		List<BoletoJuno> boletoJunos = new ArrayList<BoletoJuno>();
+
+		int recorrencia = 1;
+
+		for (CobrancaGeradaAssasData data : listaCobranca.getData()) {
+
+			BoletoJuno boletoJuno = new BoletoJuno();
+
+			boletoJuno.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+			boletoJuno.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+			boletoJuno.setCode(data.getId());
+			boletoJuno.setLink(data.getInvoiceUrl());
+			boletoJuno.setDataVencimento(new SimpleDateFormat("yyyy-MM-dd")
+					.format(new SimpleDateFormat("yyyy-MM-dd").parse(data.getDueDate())));
+			boletoJuno.setCheckoutUrl(data.getInvoiceUrl());
+			boletoJuno.setValor(new BigDecimal(data.getValue()));
+			boletoJuno.setIdChrBoleto(data.getId());
+			boletoJuno.setInstallmentLink(data.getInvoiceUrl());
+			boletoJuno.setRecorrencia(recorrencia);
+
+			boletoJunos.add(boletoJuno);
+			recorrencia++;
+		}
+
+		boletoJunoRepository.saveAllAndFlush(boletoJunos);
+
+		return boletoJunos.get(0).getCheckoutUrl();
 
 	}
 
