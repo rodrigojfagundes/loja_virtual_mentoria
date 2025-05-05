@@ -29,46 +29,40 @@ public class AcessoController {
 	@Autowired
 	private AcessoRepository acessoRepository;
 
-	
-	
-	
-	
 	@ResponseBody
 	@PostMapping(value = "**/salvarAcesso")
-	public ResponseEntity<Acesso> salvarAcesso(@RequestBody Acesso acesso) throws ExceptionMentoriaJava {
+	public ResponseEntity<Acesso> salvarAcesso(@RequestBody Acesso acesso)
+			throws ExceptionMentoriaJava { /* Recebe o JSON e converte pra Objeto */
 
-		
-		
 		if (acesso.getId() == null) {
 			List<Acesso> acessos = acessoRepository.buscarAcessoDesc(acesso.getDescricao().toUpperCase());
 
 			if (!acessos.isEmpty()) {
-				throw new ExceptionMentoriaJava("Ja existe acesso com a descricao: " + acesso.getDescricao());
+				throw new ExceptionMentoriaJava("Já existe Acesso com a descrição: " + acesso.getDescricao());
 			}
 		}
 
 		Acesso acessoSalvo = acessoService.save(acesso);
-		return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.OK);
 
+		return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.OK);
 	}
 
-	@ResponseBody
-	@PostMapping(value = "**/deleteAcesso")
-	public ResponseEntity<?> deleteAcesso(@RequestBody Acesso acesso) {
+	@ResponseBody /* Poder dar um retorno da API */
+	@PostMapping(value = "**/deleteAcesso") /* Mapeando a url para receber JSON */
+	public ResponseEntity<?> deleteAcesso(@RequestBody Acesso acesso) { /* Recebe o JSON e converte pra Objeto */
 
 		acessoRepository.deleteById(acesso.getId());
-		return new ResponseEntity("Acesso Removido", HttpStatus.OK);
 
+		return new ResponseEntity("Acesso Removido", HttpStatus.OK);
 	}
 
-	
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteAcessoPorId/{id}")
 	public ResponseEntity<?> deleteAcessoPorId(@PathVariable("id") Long id) {
 
 		acessoRepository.deleteById(id);
-		return new ResponseEntity("Acesso Removido", HttpStatus.OK);
 
+		return new ResponseEntity("Acesso Removido", HttpStatus.OK);
 	}
 
 	@ResponseBody
@@ -78,21 +72,19 @@ public class AcessoController {
 		Acesso acesso = acessoRepository.findById(id).orElse(null);
 
 		if (acesso == null) {
-			throw new ExceptionMentoriaJava("Não encontrou Acesso com codigo: " + id);
+			throw new ExceptionMentoriaJava("Não encontrou Acesso com código: " + id);
 		}
 
 		return new ResponseEntity<Acesso>(acesso, HttpStatus.OK);
-
 	}
 
 	@ResponseBody
-	@GetMapping(value = "**/buscarPorDesc/{descricao}")
-	public ResponseEntity<List<Acesso>> buscarPorDesc(@PathVariable("descricao") String desc) {
+	@GetMapping(value = "**/buscarPorDesc/{desc}")
+	public ResponseEntity<List<Acesso>> buscarPorDesc(@PathVariable("desc") String desc) {
 
 		List<Acesso> acesso = acessoRepository.buscarAcessoDesc(desc.toUpperCase());
 
 		return new ResponseEntity<List<Acesso>>(acesso, HttpStatus.OK);
-
 	}
 
 }

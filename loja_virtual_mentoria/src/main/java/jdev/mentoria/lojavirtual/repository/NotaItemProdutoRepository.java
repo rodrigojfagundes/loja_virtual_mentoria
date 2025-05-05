@@ -11,37 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 import jdev.mentoria.lojavirtual.model.NotaFiscalCompra;
 import jdev.mentoria.lojavirtual.model.NotaItemProduto;
 
-
 @Repository
 @Transactional
-public interface NotaItemProdutoRepository extends JpaRepository<NotaItemProduto, Long>{
-	
-	
-	
-	
-	
-	
-	
+public interface NotaItemProdutoRepository extends JpaRepository<NotaItemProduto, Long> {
+
 	@Query("select nip from NotaItemProduto nip where nip.produto.id = ?1 and nip.notaFiscalCompra.id = ?2")
 	List<NotaItemProduto> buscaNotaItemPorProdutoNota(Long idProduto, Long idNotaFiscal);
-	
-	
-	
+
 	@Query("select nip from NotaItemProduto nip where nip.produto.id = ?1")
 	List<NotaItemProduto> buscaNotaItemProduto(Long idProduto);
-	
-	
+
 	@Query("select nip from NotaItemProduto nip where nip.notaFiscalCompra.id = ?2")
 	List<NotaItemProduto> buscaNotaItemPorNotaFiscal(Long idNotaFiscal);
-	
-	
+
 	@Query("select nip from NotaItemProduto nip where nip.empresa.id = ?2")
 	List<NotaFiscalCompra> buscaNotaItemPorEmpresa(Long idEmpresa);
-	
+
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = "delete from nota_item_produto where id = ?1")
 	void deleteByIdNotaItem(Long id);
 
-	
 }

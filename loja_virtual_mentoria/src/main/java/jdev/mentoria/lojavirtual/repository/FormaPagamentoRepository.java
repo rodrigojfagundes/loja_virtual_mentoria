@@ -11,14 +11,7 @@ import jdev.mentoria.lojavirtual.model.FormaPagamento;
 @Repository
 public interface FormaPagamentoRepository extends JpaRepository<FormaPagamento, Long> {
 
-	
-	
-	
-	@Query(value = "select f from FormaPagamento f where f.empresa.id =?1")
+	@Query(value = "select f from FormaPagamento f where f.empresa.id = ?1")
 	List<FormaPagamento> findAll(Long idEmpresa);
-	
-	
-	
-	
-	
+
 }

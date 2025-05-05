@@ -4,32 +4,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-
-
-public class OptionsEnvioEtiquetaDTO implements Serializable{
+public class OptionsEnvioEtiquetaDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private String insurance_value;
+
 	private boolean receipt;
 	private boolean own_hand;
 	private boolean reverse;
 	private boolean non_commercial;
 
-	
-	
 	private InvoiceEnvioDTO invoice = new InvoiceEnvioDTO();
-	
-	
+
 	private String platform;
-	
-	
-	List<TagsEnvioDto> tags = new ArrayList<TagsEnvioDto>();
+
+	private List<TagsEnvioDto> tags = new ArrayList<TagsEnvioDto>();
 
 	public String getInsurance_value() {
 		return insurance_value;
@@ -94,7 +84,5 @@ public class OptionsEnvioEtiquetaDTO implements Serializable{
 	public void setTags(List<TagsEnvioDto> tags) {
 		this.tags = tags;
 	}
-	
-	
-	
+
 }

@@ -17,212 +17,164 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
-import jdev.mentoria.lojavirtual.model.MarcaProduto;
 import jdev.mentoria.lojavirtual.model.NotaFiscalCompra;
 import jdev.mentoria.lojavirtual.model.NotaFiscalVenda;
-import jdev.mentoria.lojavirtual.model.dto.ObejtoRequisicaoRelatorioProdCompraNotaFiscalDto;
+import jdev.mentoria.lojavirtual.model.dto.ObejtoRequisicaoRelatorioProdCompraNotaFiscalDTO;
 import jdev.mentoria.lojavirtual.model.dto.ObejtoRequisicaoRelatorioProdutoAlertaEstoque;
 import jdev.mentoria.lojavirtual.model.dto.ObjetoRelatorioStatusCompra;
 import jdev.mentoria.lojavirtual.repository.NotaFiscalCompraRepository;
 import jdev.mentoria.lojavirtual.repository.NotaFiscalVendaRepository;
 import jdev.mentoria.lojavirtual.service.NotaFiscalCompraService;
 
-
-
 @RestController
 public class NotaFiscalCompraController {
-	
+
 	@Autowired
 	private NotaFiscalCompraRepository notaFiscalCompraRepository;
-	
+
 	@Autowired
 	private NotaFiscalVendaRepository notaFiscalVendaRepository;
-	
+
 	@Autowired
 	private NotaFiscalCompraService notaFiscalCompraService;
-	
-	
+
 	@ResponseBody
 	@PostMapping(value = "**/relatorioStatusCompra")
 	public ResponseEntity<List<ObjetoRelatorioStatusCompra>> relatorioStatusCompra(
-			@Valid @RequestBody ObjetoRelatorioStatusCompra objetoRelatorioStatusCompra){
-		
+			@Valid @RequestBody ObjetoRelatorioStatusCompra objetoRelatorioStatusCompra) {
+
 		List<ObjetoRelatorioStatusCompra> retorno = new ArrayList<ObjetoRelatorioStatusCompra>();
-		
-		
+
 		retorno = notaFiscalCompraService.relatorioStatusVendaLojaVirtual(objetoRelatorioStatusCompra);
-		
+
 		return new ResponseEntity<List<ObjetoRelatorioStatusCompra>>(retorno, HttpStatus.OK);
+
 	}
-	
-	
-	
+
 	@ResponseBody
-	@PostMapping(value = "/**/relatorioProdCompradoNotaFiscal")
-	public ResponseEntity<List<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDto>> relatorioProdCompradoNotaFiscal(
-			@Valid @RequestBody ObejtoRequisicaoRelatorioProdCompraNotaFiscalDto objetoRequisicaoRelatorioProdutoCompraNotaFiscalDto){
-		
-		
-		
-		List<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDto> retorno = 
-				new ArrayList<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDto>();
-		
-		retorno = notaFiscalCompraService.gerarRelatorioProdCompraNota(
-				objetoRequisicaoRelatorioProdutoCompraNotaFiscalDto);
-		
-		return new ResponseEntity<List<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDto>>(retorno, HttpStatus.OK);
-	
+	@PostMapping(value = "**/relatorioProdCompradoNotaFiscal")
+	public ResponseEntity<List<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDTO>> relatorioProdCompradoNotaFiscal(
+			@Valid @RequestBody ObejtoRequisicaoRelatorioProdCompraNotaFiscalDTO obejtoRequisicaoRelatorioProdCompraNotaFiscalDto) {
+
+		List<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDTO> retorno = new ArrayList<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDTO>();
+
+		retorno = notaFiscalCompraService
+				.gerarRelatorioProdCompraNota(obejtoRequisicaoRelatorioProdCompraNotaFiscalDto);
+
+		return new ResponseEntity<List<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDTO>>(retorno, HttpStatus.OK);
+
 	}
-	
-	
+
 	@ResponseBody
-	@PostMapping(value = "/**/relatorioProdAlertaEstoque")
+	@PostMapping(value = "**/relatorioProdAlertaEstoque")
 	public ResponseEntity<List<ObejtoRequisicaoRelatorioProdutoAlertaEstoque>> relatorioProdAlertaEstoque(
-			@Valid @RequestBody ObejtoRequisicaoRelatorioProdutoAlertaEstoque 
-			obejtoRequisicaoRelatorioProdutoAlertaEstoque){
-		
-		
-		
-		List<ObejtoRequisicaoRelatorioProdutoAlertaEstoque> retorno = 
-				new ArrayList<ObejtoRequisicaoRelatorioProdutoAlertaEstoque>();
-		
-		retorno = notaFiscalCompraService.gerarRelatorioAlertaEstoque(
-				obejtoRequisicaoRelatorioProdutoAlertaEstoque);
-		
-		return new ResponseEntity<
-				List<ObejtoRequisicaoRelatorioProdutoAlertaEstoque>>(retorno, HttpStatus.OK);
-	
+			@Valid @RequestBody ObejtoRequisicaoRelatorioProdutoAlertaEstoque obejtoRequisicaoRelatorioProdCompraNotaFiscalDto) {
+
+		List<ObejtoRequisicaoRelatorioProdutoAlertaEstoque> retorno = new ArrayList<ObejtoRequisicaoRelatorioProdutoAlertaEstoque>();
+
+		retorno = notaFiscalCompraService.gerarRelatorioAlertaEstoque(obejtoRequisicaoRelatorioProdCompraNotaFiscalDto);
+
+		return new ResponseEntity<List<ObejtoRequisicaoRelatorioProdutoAlertaEstoque>>(retorno, HttpStatus.OK);
+
 	}
-	
-	
+
 	@ResponseBody
 	@PostMapping(value = "**/salvarNotaFiscalCompra")
-	public ResponseEntity<NotaFiscalCompra> salvarNotaFiscalCompra(@RequestBody @Valid NotaFiscalCompra notaFiscalCompra) throws ExceptionMentoriaJava {
-		
-		if(notaFiscalCompra.getId() == null) {			
+	public ResponseEntity<NotaFiscalCompra> salvarNotaFiscalCompra(
+			@RequestBody @Valid NotaFiscalCompra notaFiscalCompra)
+			throws ExceptionMentoriaJava { /* Recebe o JSON e converte pra Objeto */
 
-			
-			
-			
-			
+		if (notaFiscalCompra.getId() == null) {
 
-
-
-	
-			if(notaFiscalCompra.getDescricaoObs() != null) {
+			if (notaFiscalCompra.getDescricaoObs() != null) {
 				boolean existe = notaFiscalCompraRepository
 						.existeNotaComDescricao(notaFiscalCompra.getDescricaoObs().toUpperCase().trim());
 
-				
-				
-				
-				
-				
-				
-			
-			if(existe) {
-				throw new ExceptionMentoriaJava("ja existe Nota de Compra com essa mesma descricao" + notaFiscalCompra.getDescricaoObs());
+				if (existe) {
+					throw new ExceptionMentoriaJava("Já existe Nota de compra com essa mesma descrição : "
+							+ notaFiscalCompra.getDescricaoObs());
+				}
 			}
-		}
-	}
-		
-		if(notaFiscalCompra.getPessoa() == null || notaFiscalCompra.getPessoa().getId() <= 0) {
-			throw new ExceptionMentoriaJava("A pessoa juridica da notafiscal deve ser informada");
-		}
-		
-		if(notaFiscalCompra.getEmpresa() == null || notaFiscalCompra.getEmpresa().getId() <= 0) {
-			throw new ExceptionMentoriaJava("A empresa responsavel pela notafiscalcompra deve ser informada");
-		}
-		
-		if(notaFiscalCompra.getContaPagar() == null || notaFiscalCompra.getContaPagar().getId() <=0) {
-			throw new ExceptionMentoriaJava("A contaapagar da nota deve ser informada");
-		}
-		
-		NotaFiscalCompra notaFiscalCompraSalva = notaFiscalCompraRepository.save(notaFiscalCompra);
-		return new ResponseEntity<NotaFiscalCompra>(notaFiscalCompraSalva, HttpStatus.OK);
 
+		}
+
+		if (notaFiscalCompra.getPessoa() == null || notaFiscalCompra.getPessoa().getId() <= 0) {
+			throw new ExceptionMentoriaJava("A Pessoa Juridica da nota fiscal deve ser informada.");
+		}
+
+		if (notaFiscalCompra.getEmpresa() == null || notaFiscalCompra.getEmpresa().getId() <= 0) {
+			throw new ExceptionMentoriaJava("A empresa responsável deve ser infromada.");
+		}
+
+		if (notaFiscalCompra.getContaPagar() == null || notaFiscalCompra.getContaPagar().getId() <= 0) {
+			throw new ExceptionMentoriaJava("A cponta a pagar da nota deve ser informada.");
+		}
+
+		NotaFiscalCompra notaFiscalCompraSalva = notaFiscalCompraRepository.save(notaFiscalCompra);
+
+		return new ResponseEntity<NotaFiscalCompra>(notaFiscalCompraSalva, HttpStatus.OK);
 	}
-	
-	
+
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteNotaFiscalCompraPorId/{id}")
 	public ResponseEntity<?> deleteNotaFiscalCompraPorId(@PathVariable("id") Long id) {
 
-		
-		
-		
-		
 		notaFiscalCompraRepository.deleteItemNotaFiscalCompra(id);
-		
-		
-		notaFiscalCompraRepository.deleteById(id);
-		return new ResponseEntity("NotaFiscalCompra Removido", HttpStatus.OK);
 
+		notaFiscalCompraRepository.deleteById(id); /* Deleta o pai */
+
+		return new ResponseEntity("Nota Fiscal Compra Removida", HttpStatus.OK);
 	}
-	
-	
+
 	@ResponseBody
 	@GetMapping(value = "**/obterNotaFiscalCompra/{id}")
-	public ResponseEntity<NotaFiscalCompra> obterNotaFiscalCompra(@PathVariable("id") Long id) throws ExceptionMentoriaJava {
+	public ResponseEntity<NotaFiscalCompra> obterNotaFiscalCompra(@PathVariable("id") Long id)
+			throws ExceptionMentoriaJava {
 
 		NotaFiscalCompra notaFiscalCompra = notaFiscalCompraRepository.findById(id).orElse(null);
 
 		if (notaFiscalCompra == null) {
-			throw new ExceptionMentoriaJava("Não encontrou Nota Fiscal Compra com codigo: " + id);
+			throw new ExceptionMentoriaJava("Não encontrou Nota Fiscal com código: " + id);
 		}
 
 		return new ResponseEntity<NotaFiscalCompra>(notaFiscalCompra, HttpStatus.OK);
-
 	}
-	
-	
-	
+
 	@ResponseBody
 	@GetMapping(value = "**/obterNotaFiscalCompraDaVenda/{idvenda}")
-	public ResponseEntity<List<NotaFiscalVenda>> obterNotaFiscalCompraDaVenda(@PathVariable("idvenda") Long idvenda) throws ExceptionMentoriaJava {
+	public ResponseEntity<List<NotaFiscalVenda>> obterNotaFiscalCompraDaVenda(@PathVariable("idvenda") Long idvenda)
+			throws ExceptionMentoriaJava {
 
-		
-		
 		List<NotaFiscalVenda> notaFiscalVenda = notaFiscalVendaRepository.buscaNotaPorVenda(idvenda);
 
 		if (notaFiscalVenda == null) {
-			throw new ExceptionMentoriaJava("Não encontrou Nota Venda Compra com codigo da venda: " + idvenda);
+			throw new ExceptionMentoriaJava("Não encontrou Nota Fiscal de venda com código da venda: " + idvenda);
 		}
 
 		return new ResponseEntity<List<NotaFiscalVenda>>(notaFiscalVenda, HttpStatus.OK);
-
 	}
 
-	
-	
-	
 	@ResponseBody
 	@GetMapping(value = "**/obterNotaFiscalCompraDaVendaUnico/{idvenda}")
-	public ResponseEntity<NotaFiscalVenda> obterNotaFiscalCompraDaVendaUnico(@PathVariable("idvenda") Long idvenda) throws ExceptionMentoriaJava {
+	public ResponseEntity<NotaFiscalVenda> obterNotaFiscalCompraDaVendaUnico(@PathVariable("idvenda") Long idvenda)
+			throws ExceptionMentoriaJava {
 
-		
-		
 		NotaFiscalVenda notaFiscalVenda = notaFiscalVendaRepository.buscaNotaPorVendaUnica(idvenda);
 
 		if (notaFiscalVenda == null) {
-			throw new ExceptionMentoriaJava("Não encontrou Nota Venda Compra com codigo da venda: " + idvenda);
+			throw new ExceptionMentoriaJava("Não encontrou Nota Fiscal de venda com código da venda: " + idvenda);
 		}
 
 		return new ResponseEntity<NotaFiscalVenda>(notaFiscalVenda, HttpStatus.OK);
-
 	}
-	
-	
-	
+
 	@ResponseBody
-	@GetMapping(value = "**/buscarNotaFiscalPorDesc/{descricao}")
-	public ResponseEntity<List<NotaFiscalCompra>> buscarNotaFiscalPorDesc(@PathVariable("descricao") String desc) {
+	@GetMapping(value = "**/buscarNotaFiscalPorDesc/{desc}")
+	public ResponseEntity<List<NotaFiscalCompra>> buscarNotaFiscalPorDesc(@PathVariable("desc") String desc) {
 
 		List<NotaFiscalCompra> notaFiscalCompras = notaFiscalCompraRepository.buscarNotaDesc(desc.toUpperCase().trim());
 
 		return new ResponseEntity<List<NotaFiscalCompra>>(notaFiscalCompras, HttpStatus.OK);
-
 	}
-	
-	
+
 }

@@ -15,24 +15,18 @@ import jdev.mentoria.lojavirtual.repository.StatusRastreioRepository;
 
 @RestController
 public class StatusRastreioController {
-	
+
 	@Autowired
 	private StatusRastreioRepository statusRastreioRepository;
-	
-	
-	
-	
-	
-	
-	
+
 	@ResponseBody
 	@GetMapping(value = "**/listaRastreioVenda/{idVenda}")
-	public ResponseEntity<List<StatusRastreio>> listaRastreioVenda(@PathVariable("idVenda") Long idVenda){
-		
-		List<StatusRastreio> statusRastreios = statusRastreioRepository.listaRastreioVenda(idVenda);		
-		
+	public ResponseEntity<List<StatusRastreio>> listaRastreioVenda(@PathVariable("idVenda") Long idVenda) {
+
+		List<StatusRastreio> statusRastreios = statusRastreioRepository.listaRastreioVenda(idVenda);
+
 		return new ResponseEntity<List<StatusRastreio>>(statusRastreios, HttpStatus.OK);
+
 	}
-	
-	
+
 }

@@ -4,25 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-
 public class ConsultaFreteDTO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
-	
-	
 	private FromDTO from;
-	
-	
-	
+
 	private ToDTO to;
-	
-	
-	
+
 	private List<ProductsDTO> products = new ArrayList<ProductsDTO>();
 
 	public FromDTO getFrom() {
@@ -49,7 +38,4 @@ public class ConsultaFreteDTO implements Serializable {
 		this.products = products;
 	}
 
-	
-	
-	
 }

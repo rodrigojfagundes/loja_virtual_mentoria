@@ -24,54 +24,48 @@ import jdev.mentoria.lojavirtual.repository.ContaPagarRepository;
 @RestController
 public class ContaPagarController {
 
-
 	@Autowired
 	private ContaPagarRepository contaPagarRepository;
 
-	
-	
-	
-	
-	@ResponseBody
-	@PostMapping(value = "**/salvarContaPagar")
-	
-	public ResponseEntity<ContaPagar> salvarContaPagar(@RequestBody @Valid ContaPagar contaPagar) throws ExceptionMentoriaJava {
-		
-		if(contaPagar.getEmpresa() == null || contaPagar.getEmpresa().getId() <=0) {
-			throw new ExceptionMentoriaJava("Empresa responsavel deve ser informada");
-		}
-	
+	@ResponseBody /* Poder dar um retorno da API */
+	@PostMapping(value = "**/salvarContaPagar") /* Mapeando a url para receber JSON */
+	public ResponseEntity<ContaPagar> salvarAcesso(@RequestBody @Valid ContaPagar contaPagar)
+			throws ExceptionMentoriaJava { /* Recebe o JSON e converte pra Objeto */
 
-		if(contaPagar.getPessoa() == null || contaPagar.getPessoa().getId() <=0) {
-			throw new ExceptionMentoriaJava("Pessoa responsavel deve ser informada");
+		if (contaPagar.getEmpresa() == null || contaPagar.getEmpresa().getId() <= 0) {
+			throw new ExceptionMentoriaJava("Empresa responsável deve ser informada");
 		}
-	
-		if(contaPagar.getPessoa_fornecedor() == null || contaPagar.getPessoa_fornecedor().getId() <=0) {
-			throw new ExceptionMentoriaJava("Fornecedor responsavel deve ser informada");
+
+		if (contaPagar.getPessoa() == null || contaPagar.getPessoa().getId() <= 0) {
+			throw new ExceptionMentoriaJava("Pessoa responsável deve ser informada");
 		}
-		
-		
-		if(contaPagar.getId() == null) {
-			List<ContaPagar> contaPagars = contaPagarRepository.buscaContaDesc(
-					contaPagar.getDescricao().toUpperCase().trim());
+
+		if (contaPagar.getPessoa_fornecedor() == null || contaPagar.getPessoa_fornecedor().getId() <= 0) {
+			throw new ExceptionMentoriaJava("Fornecedor responsável deve ser informada");
+		}
+
+		if (contaPagar.getId() == null) {
+			List<ContaPagar> contaPagars = contaPagarRepository
+					.buscaContaDesc(contaPagar.getDescricao().toUpperCase().trim());
 			if (!contaPagars.isEmpty()) {
-				throw new ExceptionMentoriaJava("Ja existe conta a pagar com a mesma descricao");
+				throw new ExceptionMentoriaJava("Já existe conta a pagar com a mesma descrição.");
 			}
 		}
-		
-		
-		ContaPagar contaPagarSalva = contaPagarRepository.save(contaPagar);
-		return new ResponseEntity<ContaPagar>(contaPagarSalva, HttpStatus.OK);
 
+		ContaPagar contaPagarSalva = contaPagarRepository.save(contaPagar);
+
+		return new ResponseEntity<ContaPagar>(contaPagarSalva, HttpStatus.OK);
 	}
 
 	@ResponseBody
+
 	@PostMapping(value = "**/deleteContaPagar")
-	public ResponseEntity<String> deleteContaPagar(@RequestBody ContaPagar contaPagar) {
+	public ResponseEntity<String> deleteContaPagar(
+			@RequestBody ContaPagar contaPagar) { /* Recebe o JSON e converte pra Objeto */
 
 		contaPagarRepository.deleteById(contaPagar.getId());
-		return new ResponseEntity<String>("ContaPagar Removido", HttpStatus.OK);
 
+		return new ResponseEntity<String>("Conta Pagar Removida", HttpStatus.OK);
 	}
 
 	@ResponseBody
@@ -79,8 +73,8 @@ public class ContaPagarController {
 	public ResponseEntity<String> deleteContaPagarPorId(@PathVariable("id") Long id) {
 
 		contaPagarRepository.deleteById(id);
-		return new ResponseEntity<String>("ContaPagar Removido", HttpStatus.OK);
 
+		return new ResponseEntity<String>("ContaPagar Removido", HttpStatus.OK);
 	}
 
 	@ResponseBody
@@ -90,11 +84,10 @@ public class ContaPagarController {
 		ContaPagar contaPagar = contaPagarRepository.findById(id).orElse(null);
 
 		if (contaPagar == null) {
-			throw new ExceptionMentoriaJava("Não encontrou ContaPagar com codigo: " + id);
+			throw new ExceptionMentoriaJava("Não encontrou Conta a PAgar com código: " + id);
 		}
 
 		return new ResponseEntity<ContaPagar>(contaPagar, HttpStatus.OK);
-
 	}
 
 	@ResponseBody
@@ -104,7 +97,6 @@ public class ContaPagarController {
 		List<ContaPagar> contaPagar = contaPagarRepository.buscaContaDesc(desc.toUpperCase());
 
 		return new ResponseEntity<List<ContaPagar>>(contaPagar, HttpStatus.OK);
-
 	}
 
 }

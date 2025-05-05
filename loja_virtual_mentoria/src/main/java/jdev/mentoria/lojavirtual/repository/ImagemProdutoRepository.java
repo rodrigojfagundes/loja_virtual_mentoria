@@ -13,18 +13,13 @@ import jdev.mentoria.lojavirtual.model.ImagemProduto;
 @Repository
 @Transactional
 public interface ImagemProdutoRepository extends JpaRepository<ImagemProduto, Long> {
-	
-	
-	
-	
-	
-	@Query("select ip from ImagemProduto ip where ip.produto.id =?1")
+
+	@Query("select ip from ImagemProduto ip where ip.produto.id = ?1")
 	List<ImagemProduto> buscaImagemProduto(Long idProduto);
-	
-	
-	
+
 	@Transactional
 	@Modifying(flushAutomatically = true)
 	@Query(nativeQuery = true, value = "delete from imagem_produto where produto_id = ?1")
 	void deleteImagem(Long idProduto);
+
 }

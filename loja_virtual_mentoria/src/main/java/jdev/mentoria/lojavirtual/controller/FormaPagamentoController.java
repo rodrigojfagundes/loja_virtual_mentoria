@@ -20,39 +20,35 @@ import jdev.mentoria.lojavirtual.repository.FormaPagamentoRepository;
 
 @RestController
 public class FormaPagamentoController {
-	
+
 	@Autowired
 	private FormaPagamentoRepository formaPagamentoRepository;
-	
+
 	@ResponseBody
 	@PostMapping(value = "**/salvarFormaPagamento")
-	public ResponseEntity<FormaPagamento> salvarFormaPagamento(
-			@RequestBody @Valid FormaPagamento formaPagamento) throws ExceptionMentoriaJava {
-		
-		formaPagamento = formaPagamentoRepository.save(formaPagamento);
-		return new ResponseEntity<FormaPagamento>(formaPagamento, HttpStatus.OK);
+	public ResponseEntity<FormaPagamento> salvarFormaPagamento(@RequestBody @Valid FormaPagamento formaPagamento)
+			throws ExceptionMentoriaJava {
 
+		formaPagamento = formaPagamentoRepository.save(formaPagamento);
+
+		return new ResponseEntity<FormaPagamento>(formaPagamento, HttpStatus.OK);
 	}
-	
-	
-	
-	@ResponseBody
-	@GetMapping(value = "**/listaFormaPagamento")
-	public ResponseEntity<List<FormaPagamento>> listaFormaPagamento(){
-		
-		return new ResponseEntity<List<FormaPagamento>>(
-				formaPagamentoRepository.findAll(), HttpStatus.OK);
-	}
-	
-	
-	
-	
+
 	@ResponseBody
 	@GetMapping(value = "**/listaFormaPagamento/{idEmpresa}")
-	public ResponseEntity<List<FormaPagamento>> listaFormaPagamentoidEmpresa(@PathVariable(value = "idEmpresa") Long idEmpresa){
-		
-		return new ResponseEntity<List<FormaPagamento>>(
-				formaPagamentoRepository.findAll(idEmpresa), HttpStatus.OK);
+	public ResponseEntity<List<FormaPagamento>> listaFormaPagamentoidEmpresa(
+			@PathVariable(value = "idEmpresa") Long idEmpresa) {
+
+		return new ResponseEntity<List<FormaPagamento>>(formaPagamentoRepository.findAll(idEmpresa), HttpStatus.OK);
+
 	}
-	
+
+	@ResponseBody
+	@GetMapping(value = "**/listaFormaPagamento")
+	public ResponseEntity<List<FormaPagamento>> listaFormaPagamento() {
+
+		return new ResponseEntity<List<FormaPagamento>>(formaPagamentoRepository.findAll(), HttpStatus.OK);
+
+	}
+
 }

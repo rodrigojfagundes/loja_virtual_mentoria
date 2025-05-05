@@ -4,72 +4,37 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-
-
-
-
 public class EnvioEtiquetaDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String service;
 	private String agency;
-	
-	
-	
-	
+
 	private FromEnvioEtiquetaDTO from = new FromEnvioEtiquetaDTO();
-	
-	
-	
-	
+
 	private ToEnvioEtiquetaDTO to = new ToEnvioEtiquetaDTO();
-	
-	
-	
-	
-	
+
 	private List<ProductsEnvioEtiquetaDTO> products = new ArrayList<ProductsEnvioEtiquetaDTO>();
-	
-	
-	
-	
-	
+
 	private List<VolumesEnvioEtiquetaDTO> volumes = new ArrayList<VolumesEnvioEtiquetaDTO>();
 
-	
-	
-	
-	
 	private OptionsEnvioEtiquetaDTO options = new OptionsEnvioEtiquetaDTO();
-	
+
 	public void setOptions(OptionsEnvioEtiquetaDTO options) {
 		this.options = options;
 	}
-	
+
 	public OptionsEnvioEtiquetaDTO getOptions() {
 		return options;
 	}
-	
-	
+
 	public String getService() {
 		return service;
 	}
 
 	public void setService(String service) {
 		this.service = service;
-	}
-
-	public String getAgency() {
-		return agency;
-	}
-
-	public void setAgency(String agency) {
-		this.agency = agency;
 	}
 
 	public FromEnvioEtiquetaDTO getFrom() {
@@ -103,9 +68,13 @@ public class EnvioEtiquetaDTO implements Serializable {
 	public void setVolumes(List<VolumesEnvioEtiquetaDTO> volumes) {
 		this.volumes = volumes;
 	}
-	
-	
-	
-	
-	
+
+	public String getAgency() {
+		return agency;
+	}
+
+	public void setAgency(String agency) {
+		this.agency = agency;
+	}
+
 }

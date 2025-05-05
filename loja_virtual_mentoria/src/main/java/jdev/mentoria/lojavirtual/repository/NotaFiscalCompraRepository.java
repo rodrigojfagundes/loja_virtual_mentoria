@@ -13,38 +13,25 @@ import jdev.mentoria.lojavirtual.model.NotaFiscalCompra;
 @Repository
 @Transactional
 public interface NotaFiscalCompraRepository extends JpaRepository<NotaFiscalCompra, Long> {
-	
-	
-	
-	
-	
+
 	@Query("select nfc from NotaFiscalCompra nfc where upper(trim(nfc.descricaoObs)) like %?1%")
 	List<NotaFiscalCompra> buscarNotaDesc(String desc);
-	
+
 	@Query(nativeQuery = true, value = "select count(1) > 0 from nota_fiscal_compra where upper(descricao_obs) like %?1%")
 	boolean existeNotaComDescricao(String desc);
-	
-	
+
 	@Query("select nfc from NotaFiscalCompra nfc where nfc.pessoa.id = ?1")
 	List<NotaFiscalCompra> buscaNotaPorPessoa(Long idPessoa);
-	
-	
+
 	@Query("select nfc from NotaFiscalCompra nfc where nfc.contaPagar.id = ?1")
 	List<NotaFiscalCompra> buscaNotaContaPagar(Long idContaPagar);
-	
-	
+
 	@Query("select nfc from NotaFiscalCompra nfc where nfc.empresa.id = ?1")
 	List<NotaFiscalCompra> buscaNotaPorEmpresa(Long idEmpresa);
-	
-	
-	
-	
-	
-	
+
 	@Transactional
 	@Modifying(flushAutomatically = true, clearAutomatically = true)
 	@Query(nativeQuery = true, value = "delete from nota_item_produto where nota_fiscal_compra_id = ?1")
 	void deleteItemNotaFiscalCompra(Long idNotaFiscalCompra);
-	
-	
+
 }

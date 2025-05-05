@@ -1,27 +1,23 @@
 package jdev.mentoria.lojavirtual.enums;
 
 public enum TipoPessoa {
-	
-	
-	JURIDICA("Juridica"),
-	JURIDICA_FORNECEDOR("Juridica e Fornecedor"),
-	FISICA("Fisica");
-	
+
+	JURIDICA("Jurídica"), JURIDICA_FORNECEDOR("Jurídica e Fornecedor"), FISICA("Física");
+
 	private String descricao;
 
-	private TipoPessoa(String descricao) {
-		this.descricao = descricao;
+	private TipoPessoa(String descrica) {
+		this.descricao = descrica;
+
 	}
-	
-	
+
 	public String getDescricao() {
 		return descricao;
 	}
-	
+
 	@Override
 	public String toString() {
-		
 		return this.descricao;
 	}
-	
+
 }

@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 import jdev.mentoria.lojavirtual.model.Usuario;
 import jdev.mentoria.lojavirtual.repository.UsuarioRepository;
 
-
-
-
 @Service
 public class ImplementacaoUserDetailsService implements UserDetailsService {
 
@@ -21,17 +18,13 @@ public class ImplementacaoUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
 
-		
-		Usuario usuario = usuarioRepository.findUserByLogin(username);
+		Usuario usuario = usuarioRepository.findUserByLogin(username);/* Recebe o login pra consulta */
 
 		if (usuario == null) {
-			throw new UsernameNotFoundException("Usuario nao foi encontrado");
+			throw new UsernameNotFoundException("Usuário não foi encontrado");
 		}
 
-		
-		
 		return new User(usuario.getLogin(), usuario.getPassword(), usuario.getAuthorities());
 	}
 
