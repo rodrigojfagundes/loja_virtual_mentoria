@@ -61,6 +61,38 @@ public class PagamentoController implements Serializable {
 	@Autowired
 	private BoletoJunoRepository boletoJunoRepository;
 
+	@RequestMapping(method = RequestMethod.POST, value = "**/finalizarCompraCartao")
+	public ResponseEntity<String> finalizarCompraCartaoAsaas(
+
+			@RequestParam("cardNumber") String cardNumber, @RequestParam("holderName") String holderName,
+			@RequestParam("securityCode") String securityCode, @RequestParam("expirationMonth") String expirationMonth,
+			@RequestParam("expirationYear") String expirationYear, @RequestParam("idVendaCampo") Long idVendaCampo,
+			@RequestParam("cpf") String cpf, @RequestParam("qtdparcela") Integer qtdparcela,
+			@RequestParam("cep") String cep, @RequestParam("rua") String rua, @RequestParam("numero") String numero,
+			@RequestParam("estado") String estado, @RequestParam("cidade") String cidade) throws Exception {
+
+		VendaCompraLojaVirtual vendaCompraLojaVirtual = vd_Cp_Loja_virt_repository.findById(idVendaCampo).orElse(null);
+
+		if (vendaCompraLojaVirtual == null) {
+			return new ResponseEntity<String>("Código da venda não existe!", HttpStatus.OK);
+		}
+
+		String cpfLimpo = cpf.replaceAll("\\.", "").replaceAll("\\-", "");
+
+		if (!ValidaCPF.isCPF(cpfLimpo)) {
+			return new ResponseEntity<String>("CPF informado é inválido.", HttpStatus.OK);
+		}
+
+		if (qtdparcela > 12 || qtdparcela <= 0) {
+			return new ResponseEntity<String>("Quantidade de parcelar deve ser de  1 até 12.", HttpStatus.OK);
+		}
+
+		if (vendaCompraLojaVirtual.getValorTotal().doubleValue() <= 0) {
+			return new ResponseEntity<String>("Valor da venda não pode ser Zero(0).", HttpStatus.OK);
+		}
+
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "**/pagamento/{idVendaCompra}")
 	public ModelAndView pagamento(@PathVariable(value = "idVendaCompra", required = false) String idVendaCompra) {
 

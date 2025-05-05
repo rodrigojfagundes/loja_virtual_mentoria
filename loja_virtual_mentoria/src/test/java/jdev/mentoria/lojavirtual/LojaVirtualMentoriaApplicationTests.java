@@ -1,4 +1,4 @@
-package jdev.mentoria.jdev.mentoria.lojavirtual;
+package jdev.mentoria.lojavirtual;
 
 import java.util.Calendar;
 import java.util.List;
