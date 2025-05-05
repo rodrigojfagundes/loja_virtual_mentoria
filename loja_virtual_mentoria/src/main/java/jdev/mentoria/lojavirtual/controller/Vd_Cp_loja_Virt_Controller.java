@@ -18,6 +18,7 @@ import javax.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -87,6 +88,9 @@ public class Vd_Cp_loja_Virt_Controller {
 	
 	@Autowired
 	private ServiceSendEmail serviceSendEmail;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
 	
 	@ResponseBody
@@ -558,6 +562,34 @@ public class Vd_Cp_loja_Virt_Controller {
 	}
 	
 	
+	
+	
+	
+	@ResponseBody
+	@GetMapping(value = "**/cancelaEtiqueta/{idEtiqueta}/{descricao}")
+	public ResponseEntity<String> cancelaEtiqueta(@PathVariable String idEtiqueta, @PathVariable String reason_id, @PathVariable String descricao) throws IOException{
+	
+		OkHttpClient client = new OkHttpClient().newBuilder() .build();
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{\n    \"order\": {\n        \"id\": \""+idEtiqueta+"\",\n        \"reason_id\": \"2\",\n        \"description\": \""+descricao+"\"\n    }\n}");
+		okhttp3.Request request = new Request.Builder()
+				  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SAND_BOX+"api/v2/me/shipment/cancel")
+				  .method("POST", body)
+				  .addHeader("Accept", "application/json")
+				  .addHeader("Content-Type", "application/json")
+				  .addHeader("Authorization", "Bearer "+ ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
+				  .addHeader("User-Agent", "suporte@jdevtreinamento.com.br")
+				  .build();
+		
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+	}
+	
+	
+	
+	
 	@ResponseBody
 	@GetMapping(value = "**/imprimeCompraEtiquetaFrete/{idVenda}")
 	public ResponseEntity<String> imprimeCompraEtiquetaFrete(
@@ -800,11 +832,20 @@ public class Vd_Cp_loja_Virt_Controller {
 			okhttp3.Response response = client.newCall(request).execute();
 			
 			
+			String respostaJson = response.body().string();
 			
 			
 			
 			
-			JsonNode jsonNode = new ObjectMapper().readTree(response.body().string());
+			
+			JsonNode jsonNode = new ObjectMapper().readTree(respostaJson);
+			
+			
+			
+			if (respostaJson.contains("error")) {
+				throw new ExceptionMentoriaJava(respostaJson);
+			}
+			
 			
 			
 			
@@ -816,7 +857,11 @@ public class Vd_Cp_loja_Virt_Controller {
 			
 			while(iterator.hasNext()) {
 				JsonNode node = iterator.next();
-				idEtiqueta = node.get("id").asText();
+				if (node.get("id") != null) {
+					idEtiqueta = node.get("id").asText();	
+				} else {
+					idEtiqueta = node.asText();
+				}
 				break;
 			}
 
@@ -832,7 +877,16 @@ public class Vd_Cp_loja_Virt_Controller {
 			
 			
 		    /*Salvando o código da etiqueta*/
-		    vd_Cp_Loja_virt_repository.updateEtiqueta(idEtiqueta, compraLojaVirtual.getId());
+			
+			
+			
+			
+			
+			
+			
+			
+			jdbcTemplate.execute("begin; update vd_cp_loja_virt set codigo_etiqueta = '"+idEtiqueta+"' where id = "+compraLojaVirtual.getId()+"  ;commit;");
+		    
 
 
 		    
@@ -961,7 +1015,8 @@ public class Vd_Cp_loja_Virt_Controller {
 							 
 							 
 							 
-							 vd_Cp_Loja_virt_repository.updateURLEtiqueta(urlEtiqueta, compraLojaVirtual.getId());
+							jdbcTemplate.execute("begin; update vd_cp_loja_virt set url_imprime_etiqueta =  '"+urlEtiqueta+"'  where id = " + compraLojaVirtual.getId() + ";commit;");
+							
 							 
 
 							
