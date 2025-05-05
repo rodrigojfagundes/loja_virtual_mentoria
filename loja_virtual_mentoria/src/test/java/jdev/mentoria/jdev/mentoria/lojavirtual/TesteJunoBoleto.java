@@ -27,7 +27,7 @@ public class TesteJunoBoleto extends TestCase {
 		dados.setPayerPhone("45999795800");
 
 		String customer_id = serviceJunoBoleto.testbuscaClientePessoaApiAsaas();
-		;
+		
 
 		assertEquals("cus_000055741916", customer_id);
 	}

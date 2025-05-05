@@ -30,6 +30,7 @@ import jdev.mentoria.lojavirtual.model.VendaCompraLojaVirtual;
 import jdev.mentoria.lojavirtual.model.dto.AsaasApiPagamentoStatus;
 import jdev.mentoria.lojavirtual.model.dto.BoletoGeradoApiJuno;
 import jdev.mentoria.lojavirtual.model.dto.ClienteAsaasApiPagamento;
+import jdev.mentoria.lojavirtual.model.dto.CobrancaApiAsaas;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaJunoAPI;
 import jdev.mentoria.lojavirtual.model.dto.ConteudoBoletoJuno;
 import jdev.mentoria.lojavirtual.model.dto.CriarWebHook;
@@ -168,6 +169,34 @@ public class ServiceJunoBoleto implements Serializable {
 		}
 
 		return clientResponse.getEntity(String.class);
+
+	}
+
+	public String gerarCarneApiAsaas(ObjetoPostCarneJuno objetoPostCarneJuno) throws Exception {
+
+		VendaCompraLojaVirtual vendaCompraLojaVirtual = vd_Cp_Loja_virt_repository
+				.findById(objetoPostCarneJuno.getIdVenda()).get();
+
+		CobrancaApiAsaas cobrancaApiAsaas = new CobrancaApiAsaas();
+		cobrancaApiAsaas.setCustomer(this.buscaClientePessoaApiAsaas(objetoPostCarneJuno));
+
+		/* PIX, BOLETO OU UNDEFINED */
+
+		cobrancaApiAsaas.setBillingType("UNDEFINED"); /* Gerando tanto PIX quanto Boleto */
+		cobrancaApiAsaas
+				.setDescription("Pix ou Boleto gerado para ao cobrança, cód: " + vendaCompraLojaVirtual.getId());
+
+		cobrancaApiAsaas.setInstallmentValue(vendaCompraLojaVirtual.getValorTotal().floatValue());
+		cobrancaApiAsaas.setInstallmentCount(1);
+
+		Calendar daVencimento = Calendar.getInstance();
+		daVencimento.add(Calendar.DAY_OF_MONTH, 7);
+		cobrancaApiAsaas.setDueDate(new SimpleDateFormat("yyyy-MM-dd").format(daVencimento.getTime()));
+
+		cobrancaApiAsaas.getInterest().setValue(1F);
+		cobrancaApiAsaas.getFine().setValue(1F);
+
+		return "";
 
 	}
 
