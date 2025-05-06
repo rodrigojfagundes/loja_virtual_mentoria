@@ -28,9 +28,12 @@ import com.sun.jersey.api.client.WebResource;
 import jdev.mentoria.lojavirtual.enums.ApiTokenIntegracao;
 import jdev.mentoria.lojavirtual.model.AccessTokenJunoAPI;
 import jdev.mentoria.lojavirtual.model.BoletoJuno;
+import jdev.mentoria.lojavirtual.model.PessoaFisica;
 import jdev.mentoria.lojavirtual.model.VendaCompraLojaVirtual;
 import jdev.mentoria.lojavirtual.model.dto.AsaasApiPagamentoStatus;
 import jdev.mentoria.lojavirtual.model.dto.BoletoGeradoApiJuno;
+import jdev.mentoria.lojavirtual.model.dto.CartaoCreditoApiAsaas;
+import jdev.mentoria.lojavirtual.model.dto.CartaoCreditoAsaasHolderInfo;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaApiAsaasCartao;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaJunoAPI;
 import jdev.mentoria.lojavirtual.model.dto.ConteudoBoletoJuno;
@@ -115,6 +118,41 @@ public class PagamentoController implements Serializable {
 		cobrancaApiAsaasCartao.setBillingType(AsaasApiPagamentoStatus.CREDIT_CARD);
 		cobrancaApiAsaasCartao
 				.setDescription("Venda realizada para cliente por cartão de crédito: ID Venda ->" + idVendaCampo);
+
+		if (qtdparcela == 1) {
+			cobrancaApiAsaasCartao.setInstallmentValue(vendaCompraLojaVirtual.getValorTotal().floatValue());
+		} else {
+			BigDecimal valorParcela = vendaCompraLojaVirtual.getValorTotal()
+					.divide(BigDecimal.valueOf(qtdparcela), RoundingMode.DOWN).setScale(2, RoundingMode.DOWN);
+
+			cobrancaApiAsaasCartao.setInstallmentValue(valorParcela.floatValue());
+		}
+
+		cobrancaApiAsaasCartao.setInstallmentCount(qtdparcela);
+		cobrancaApiAsaasCartao.setDueDate(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
+
+		/* Dados cartão de crédito */
+
+		CartaoCreditoApiAsaas creditCard = new CartaoCreditoApiAsaas();
+		creditCard.setCcv(securityCode);
+		creditCard.setExpiryMonth(expirationMonth);
+		creditCard.setExpiryYear(expirationYear);
+		creditCard.setHolderName(holderName);
+		creditCard.setNumber(cardNumber);
+
+		cobrancaApiAsaasCartao.setCreditCard(creditCard);
+
+		PessoaFisica pessoaFisica = vendaCompraLojaVirtual.getPessoa();
+
+		CartaoCreditoAsaasHolderInfo creditCardHolderInfo = new CartaoCreditoAsaasHolderInfo();
+		creditCardHolderInfo.setName(pessoaFisica.getNome());
+		creditCardHolderInfo.setEmail(pessoaFisica.getEmail());
+		creditCardHolderInfo.setCpfCnpj(pessoaFisica.getCpf());
+		creditCardHolderInfo.setPostalCode(cep);
+		creditCardHolderInfo.setAddressNumber(numero);
+		creditCardHolderInfo.setAddressComplement(null);
+		creditCardHolderInfo.setPhone(pessoaFisica.getTelefone());
+		creditCardHolderInfo.setMobilePhone(pessoaFisica.getTelefone());
 
 	}
 
