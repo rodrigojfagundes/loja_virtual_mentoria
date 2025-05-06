@@ -29,10 +29,13 @@ import jdev.mentoria.lojavirtual.enums.ApiTokenIntegracao;
 import jdev.mentoria.lojavirtual.model.AccessTokenJunoAPI;
 import jdev.mentoria.lojavirtual.model.BoletoJuno;
 import jdev.mentoria.lojavirtual.model.VendaCompraLojaVirtual;
+import jdev.mentoria.lojavirtual.model.dto.AsaasApiPagamentoStatus;
 import jdev.mentoria.lojavirtual.model.dto.BoletoGeradoApiJuno;
+import jdev.mentoria.lojavirtual.model.dto.CobrancaApiAsaasCartao;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaJunoAPI;
 import jdev.mentoria.lojavirtual.model.dto.ConteudoBoletoJuno;
 import jdev.mentoria.lojavirtual.model.dto.ErroResponseApiJuno;
+import jdev.mentoria.lojavirtual.model.dto.ObjetoPostCarneJuno;
 import jdev.mentoria.lojavirtual.model.dto.PagamentoCartaoCredito;
 import jdev.mentoria.lojavirtual.model.dto.PaymentsCartaoCredito;
 import jdev.mentoria.lojavirtual.model.dto.RetornoPagamentoCartaoJuno;
@@ -90,6 +93,28 @@ public class PagamentoController implements Serializable {
 		if (vendaCompraLojaVirtual.getValorTotal().doubleValue() <= 0) {
 			return new ResponseEntity<String>("Valor da venda não pode ser Zero(0).", HttpStatus.OK);
 		}
+
+		List<BoletoJuno> cobrancas = boletoJunoRepository.cobrancaDaVendaCompra(idVendaCampo);
+
+		for (BoletoJuno boletoJuno : cobrancas) {
+			boletoJunoRepository.deleteById(boletoJuno.getId());
+			boletoJunoRepository.flush();
+		}
+
+		/* INICIO - Gerando cobranca por cartão */
+		ObjetoPostCarneJuno carne = new ObjetoPostCarneJuno();
+
+		carne.setPayerCpfCnpj(cpfLimpo);
+		carne.setPayerName(holderName);
+		carne.setPayerPhone(vendaCompraLojaVirtual.getPessoa().getTelefone());
+
+		CobrancaApiAsaasCartao cobrancaApiAsaasCartao = new CobrancaApiAsaasCartao();
+
+		cobrancaApiAsaasCartao.setCustomer(serviceJunoBoleto.buscaClientePessoaApiAsaas(carne));
+
+		cobrancaApiAsaasCartao.setBillingType(AsaasApiPagamentoStatus.CREDIT_CARD);
+		cobrancaApiAsaasCartao
+				.setDescription("Venda realizada para cliente por cartão de crédito: ID Venda ->" + idVendaCampo);
 
 	}
 
