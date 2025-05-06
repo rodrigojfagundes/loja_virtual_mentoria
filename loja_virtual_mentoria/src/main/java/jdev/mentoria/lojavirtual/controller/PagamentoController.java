@@ -35,8 +35,10 @@ import jdev.mentoria.lojavirtual.model.dto.BoletoGeradoApiJuno;
 import jdev.mentoria.lojavirtual.model.dto.CartaoCreditoApiAsaas;
 import jdev.mentoria.lojavirtual.model.dto.CartaoCreditoAsaasHolderInfo;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaApiAsaasCartao;
+import jdev.mentoria.lojavirtual.model.dto.CobrancaGeradaCartaoCreditoAsaas;
 import jdev.mentoria.lojavirtual.model.dto.CobrancaJunoAPI;
 import jdev.mentoria.lojavirtual.model.dto.ConteudoBoletoJuno;
+import jdev.mentoria.lojavirtual.model.dto.ErroResponseApiAsaas;
 import jdev.mentoria.lojavirtual.model.dto.ErroResponseApiJuno;
 import jdev.mentoria.lojavirtual.model.dto.ObjetoPostCarneJuno;
 import jdev.mentoria.lojavirtual.model.dto.PagamentoCartaoCredito;
@@ -184,8 +186,16 @@ public class PagamentoController implements Serializable {
 				}
 			}
 
-			return new ResponseEntity<String>("Erro ao efetuar cobrança: ", HttpStatus.OK);
+			ErroResponseApiAsaas apiAsaas = objectMapper.readValue(stringRetorno,
+					new TypeReference<ErroResponseApiAsaas>() {
+					});
+
+			return new ResponseEntity<String>("Erro ao efetuar cobrança: " + apiAsaas.listaErros(), HttpStatus.OK);
 		}
+
+		CobrancaGeradaCartaoCreditoAsaas cartaoCredito = objectMapper.readValue(stringRetorno,
+				new TypeReference<CobrancaGeradaCartaoCreditoAsaas>() {
+				});
 
 	}
 
