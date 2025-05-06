@@ -154,6 +154,39 @@ public class PagamentoController implements Serializable {
 		creditCardHolderInfo.setPhone(pessoaFisica.getTelefone());
 		creditCardHolderInfo.setMobilePhone(pessoaFisica.getTelefone());
 
+		cobrancaApiAsaasCartao.setCreditCardHolderInfo(creditCardHolderInfo);
+
+		String json = new ObjectMapper().writeValueAsString(cobrancaApiAsaasCartao);
+
+		Client client = new HostIgnoringCliente(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringCliente();
+
+		WebResource webResource = client.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "payments");
+
+		ClientResponse clientResponse = webResource.accept("application/json;charset=UTF-8")
+				.header("Content-Type", "application/json;charset=UTF-8")
+				.header("access_token", AsaasApiPagamentoStatus.API_KEY).post(ClientResponse.class, json);
+
+		String stringRetorno = clientResponse.getEntity(String.class);
+		int status = clientResponse.getStatus();
+		clientResponse.close();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+		if (status != 200) {/* Deu erro */
+
+			for (BoletoJuno boletoJuno : cobrancas) {
+
+				if (boletoJunoRepository.existsById(boletoJuno.getId())) {
+					boletoJunoRepository.deleteById(boletoJuno.getId());
+					boletoJunoRepository.flush();
+				}
+			}
+
+			return new ResponseEntity<String>("Erro ao efetuar cobrança: ", HttpStatus.OK);
+		}
+
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "**/pagamento/{idVendaCompra}")
