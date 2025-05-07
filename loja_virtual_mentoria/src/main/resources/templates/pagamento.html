@@ -6,13 +6,14 @@
 <title>Insert title here</title>
 
 
-<!-- Latest compiled and minified CSS -->
+
+<!-- Latest compiled and minified CSS para melhorar o desing -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-<!-- Optional theme -->
+<!-- Optional theme... para mehorar o desing-->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
 
-<!-- Latest compiled and minified JavaScript -->
+<!-- Latest compiled and minified JavaScript  -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 
@@ -22,8 +23,6 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.map"></script>
 
-<script type="text/javascript" src="https://www.boletobancario.com/boletofacil/wro/direct-checkout.min.js"></script>
-
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script> 
@@ -31,11 +30,12 @@
 </head>
 <body>
 
+
 <div class="container">
 
     <form style="padding-top: 20px; padding-bottom: 20px" id="formcheckout">
      <input type="hidden" th:value="${venda.id}" id="idVendaCampo">
-    
+    		
        <div class="form-row">
           <div class="form-group col-md-6">
             <label for="nome">Nome:</label>
@@ -60,13 +60,14 @@
            </div> 
        </div>
        
+
        <div class="form-row" id="divcpf">
          <div class="form-group col-md-12">
               <label for="cpf">CPF do titular:</label>
             <input th:value="${venda.pessoa.cpf}" type="text" placeholder="000.000.000-00" class="form-control" id="cpf" required="required" style="height: 40px;">
          </div>
        </div>
-       
+
        <div class="form-row" id="linha2cartao">
            <div class="form-group col-md-4">
               <label for="mesvalidade">Mês de validade:</label>
@@ -107,6 +108,7 @@
                  <option value="2037">37</option>
               </select>
            </div>
+
            <div class="form-group col-md-4">
            <label for="cvv">Código de segurança ou CVV:</label>
             <input type="text" style="height: 40px;" placeholder="380" class="form-control" id="cvv" required="required">
@@ -114,6 +116,7 @@
            
        </div>
        
+	   <!--selecione o numero de parcelas-->
        <div class="form-row">
           <div class="form-group col-md-12">
             <label for="qtdparcela">Selecione o número de parcela:</label>
@@ -134,17 +137,22 @@
           </div>
        </div>
        
+	   <!--campos de endereco a baixo... cep, sera passado
+		pelo usuario atraves da TELA DE pagamento.html...
+		-->
         <div class="form-row" id="divendereco">
           <div class="form-group col-md-4">
              <label for="cep">CEP de cobrança:</label>
             <input type="text" style="height: 40px;" placeholder="00000-000" class="form-control" id="cep" required="required">
           </div>
           
+		  <!--campo de endereco rua...-->
           <div class="form-group col-md-4">
              <label for="rua">Rua:</label>
             <input type="text" style="height: 40px;" class="form-control" id="rua" required="required">
           </div>
           
+		  <!--campo de numero da casa/apartamento...-->
            <div class="form-group col-md-4">
              <label for="numero">Número:</label>
             <input type="text" style="height: 40px;" class="form-control" id="numero" required="required">
@@ -198,17 +206,11 @@
        
     </form>
 </div>
-
-
-
-		
 	
 <script type="text/javascript">
-
-       var checkout = new DirectCheckout('10951138DA2E18AA0275F43ACA03649EC406D9F5331D9F78CC4169A965B873AB35FFAEE08E46454E');
-
+ 
         $(document).ready(function() {
-        	
+
         	$('#cpf').mask('000.000.000-00',{reverse: true});
         	
         	$('#cep').mask('00000-000',{reverse: true});
@@ -216,9 +218,6 @@
         	$('#cvv').mask('000',{reverse: true});
         	
         	$('#numerocartao').mask('0000.0000.0000.0000',{reverse: true});
-
-
-
 
             function limpa_formulário_cep() {
                 // Limpa valores do formulário de cep.
@@ -278,8 +277,7 @@
                 }
             });
         });
-        
-        
+          
   function realizarPagamento(){
 	  
 	  
@@ -296,8 +294,7 @@
 	  var numero = $('#numero').val();
 	  var estado = $('#estado').val();
 	  var cidade = $('#cidade').val();
-	  
-	  
+
 	  if(cidade.trim() == ''){
 		  alert('Informe a Cidade de cobrança do cartão de crédito.');
 		  return;
@@ -352,7 +349,7 @@
 		  return;
 	  }
 	  
-	  
+	//validando os dados do cartao de credito
 	  var cardData = {
 			cardNumber: numerocartao.replaceAll('.',""),
 			holderName: nomecartao,
@@ -361,51 +358,49 @@
 			expirationYear: anovalidade
 	  };
 	  
-	  
-	  var isValidCardNumber = checkout.isValidCardNumber(cardData.cardNumber);
+	  //verificando se o retorno de se o num do cartao e valido e diferente
+	  //de null... prof modificou na aula 26 do modulo 12...
+	  //pq a asaas valida de outra forma....
+	  var isValidCardNumber = cardData.cardNumber != null;
 	  
 	  if (isValidCardNumber == false){
 		  alert('Número do cartão é inválido');
 		  return;
 	  }
 	  
-	  
-	  var isValidSecurityCode = checkout.isValidSecurityCode(cardData.cardNumber, cvv);
+	  //validando o codigo de seguranca do cartao... prof modificou na
+	  //aula 26.12
+	  var isValidSecurityCode = cardData.cardNumber != null && cvv != null;
 	  
 	  if (isValidSecurityCode == false){
 		  alert('Códivo CVV de segurança é inválido.');
 		  return;
 	  }
 	  
-	  
-	  var isValidExpireDate = checkout.isValidExpireDate(cardData.expirationMonth, cardData.expirationYear);
+	  //validando a data de validade do cartao... prof modificou na aula
+	  //26 do modulo 12... pq asaas valida de outra forma
+	  var isValidExpireDate = cardData.expirationMonth != null && cardData.expirationYear != null;
 	  
 	  if (isValidExpireDate == false){
 		  alert('Data de válidade é inválida');
 		  return;
 	  }
 	  
+	  //prof modificou na aula
+	  //26 do modulo 12... pq asaas valida de outra forma
+	  var isValidCardData = cardData != null; 
 	  
-	  var isValidCardData = checkout.isValidCardData(cardData, function(error) {
-		  
-		  if (error.toString().includes('Invalid holder name', error)){
-			  alert('Seu nome informado não está igual ao escrito no cartão de crédito.');
-		  }else{
-			  alert('Mensagem de erro: ' + error.toString());
-		  }
-		  
-		  return;
-	  });
 	  
 	  
 	 // console.info('isValidCardData' + isValidCardData);
 	 // console.info('isValidExpireDate' + isValidExpireDate);
 	 // console.info('isValidSecurityCode' + isValidSecurityCode);
 	 // console.info('isValidCardNumber' + isValidCardNumber);
-	  
+	
+	 //prof modificou na aula
+	 //26 do modulo 12... pq asaas valida de outra forma
 	  if (isValidCardData && isValidExpireDate && isValidSecurityCode && isValidCardNumber){
 		  
-		    checkout.getCardHash(cardData, function(cardHash) {
 		      
 			document.getElementById('buttonrealizarPagamento').disabled = true;
 			document.getElementById('buttonrealizarPagamento').value = 'Efetuando pagamento...';
@@ -414,7 +409,6 @@
 			   method: 'POST',
 			   url: 'finalizarCompraCartao',
 			   data: {
-				   cardHash: cardHash,
 				   cardNumber: cardData.cardNumber,
 				   holderName: cardData.holderName,
 				   securityCode: cardData.securityCode,
@@ -452,25 +446,13 @@
 		   });
 		  
 		  
-			  
-		 
-		  }, function(error) {
-		      alert('Não foi possível gerar o HASH do cartão de crédito": ' + error);
-			  return;
-			  
-		  });
-		  
 	  }else {
 		  alert('O pagamento não pode ser realizado.');
 		  return;
 	  }
-	  
-	  
-  }      
 
-    </script>	
-
-
+  }
+    </script>
 
 </body>
 </html>
