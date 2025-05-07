@@ -456,22 +456,6 @@ public class ServiceJunoBoleto implements Serializable {
 		}
 	}
 
-//	
-//	 {"id":"wbh_AE815607C1F5A94934934A2EA3CA0180",
-//	  "url":	 * 
-// "https://lojavirtualmentoria-env.eba-bijtuvkg.sa-east-1
-//	 .elasticbeanstalk.com/loja_virtual_mentoria
-//	 /requisicaojunoboleto/notificacaoapiv2","
-//	 		+ ""secret":"23b85f4998289533ed3ee310ae9d5b
-//	 		d3f803fadac7fb1ecff0296fbf1bb060f8","stat
-//	 		us":"ACTIVE","eventTypes":[{"id":"evt_DC2
-//	 *		E7E8848B08C62","name":"DOCUMENT_STATUS_CHANGED""
-//	 *				+ ","label":"O status de um document
-//	 *				o foi alterado","status":"ENABLED"}],"_lin
-//	 *				ks":{"self":{"href":"https://api.juno.com.br/
-//	 *				api-integration/notifications/webhooks/wbh_
-//	 *				AE815607C1F5A94934934A2EA3CA0180"}}}
-
 	public String criarWebHook(CriarWebHook criarWebHook) throws Exception {
 
 		AccessTokenJunoAPI accessTokenJunoAPI = this.obterTokenApiJuno();
