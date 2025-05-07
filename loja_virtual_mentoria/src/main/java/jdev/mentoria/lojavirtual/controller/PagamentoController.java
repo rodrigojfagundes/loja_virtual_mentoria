@@ -233,6 +233,20 @@ public class PagamentoController implements Serializable {
 
 		boletoJunoRepository.saveAllAndFlush(boletoJunos);
 
+		if (cartaoCredito.getStatus().equalsIgnoreCase("CONFIRMED")) {
+
+			for (BoletoJuno boletoJuno : boletoJunos) {
+				boletoJunoRepository.quitarBoletoById(boletoJuno.getId());
+			}
+
+			vd_Cp_Loja_virt_repository.updateFinalizaVenda(vendaCompraLojaVirtual.getId());
+
+			return new ResponseEntity<String>("sucesso", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Pagamento não pode ser finalizado: Status:" + cartaoCredito.getStatus(),
+					HttpStatus.OK);
+		}
+
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "**/pagamento/{idVendaCompra}")
@@ -252,7 +266,7 @@ public class PagamentoController implements Serializable {
 		return modelAndView;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "**/finalizarCompraCartao")
+	@RequestMapping(method = RequestMethod.POST, value = "**/finalizarCompraCartaoJuno")
 	public ResponseEntity<String> finalizarCompraCartao(@RequestParam("cardHash") String cardHash,
 			@RequestParam("cardNumber") String cardNumber, @RequestParam("holderName") String holderName,
 			@RequestParam("securityCode") String securityCode, @RequestParam("expirationMonth") String expirationMonth,

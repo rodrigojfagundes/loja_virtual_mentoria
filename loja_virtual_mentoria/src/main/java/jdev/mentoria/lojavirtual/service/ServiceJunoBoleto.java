@@ -146,9 +146,9 @@ public class ServiceJunoBoleto implements Serializable {
 				.header("Content-Type", "application/json").header("access_token", AsaasApiPagamentoStatus.API_KEY)
 				.post(ClientResponse.class, "{\"type\":\"EVP\"}");
 
-		String stringRetorno = clientResponse.getEntity(String.class);
+		String strinRetorno = clientResponse.getEntity(String.class);
 		clientResponse.close();
-		return stringRetorno;
+		return strinRetorno;
 
 	}
 
