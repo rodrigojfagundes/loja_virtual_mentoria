@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,6 +197,41 @@ public class PagamentoController implements Serializable {
 		CobrancaGeradaCartaoCreditoAsaas cartaoCredito = objectMapper.readValue(stringRetorno,
 				new TypeReference<CobrancaGeradaCartaoCreditoAsaas>() {
 				});
+
+		int recorrencia = 1;
+		List<BoletoJuno> boletoJunos = new ArrayList<BoletoJuno>();
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date dataCobranca = dateFormat.parse(cobrancaApiAsaasCartao.getDueDate());
+		Calendar calendar = Calendar.getInstance();
+
+		for (int p = 1; p <= qtdparcela; p++) {
+
+			BoletoJuno boletoJuno = new BoletoJuno();
+
+			boletoJuno.setChargeICartao(cartaoCredito.getId());
+			boletoJuno.setCheckoutUrl(cartaoCredito.getInvoiceUrl());
+			boletoJuno.setCode(cartaoCredito.getId());
+			boletoJuno.setDataVencimento(dateFormat.format(dataCobranca));
+
+			calendar.setTime(dataCobranca);
+			calendar.add(Calendar.MONTH, 1);
+			dataCobranca = calendar.getTime();
+
+			boletoJuno.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+			boletoJuno.setIdChrBoleto(cartaoCredito.getId());
+			boletoJuno.setIdPix(cartaoCredito.getId());
+			boletoJuno.setInstallmentLink(cartaoCredito.getInvoiceUrl());
+			boletoJuno.setQuitado(false);
+			boletoJuno.setRecorrencia(recorrencia);
+			boletoJuno.setValor(BigDecimal.valueOf(cobrancaApiAsaasCartao.getInstallmentValue()));
+			boletoJuno.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+
+			recorrencia++;
+			boletoJunos.add(boletoJuno);
+		}
+
+		boletoJunoRepository.saveAllAndFlush(boletoJunos);
 
 	}
 
