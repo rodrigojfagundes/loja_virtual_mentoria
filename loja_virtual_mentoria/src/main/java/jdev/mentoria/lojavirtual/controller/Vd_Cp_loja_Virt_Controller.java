@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojavirtual.enums.ApiTokenIntegracao;
 import jdev.mentoria.lojavirtual.enums.StatusContaReceber;
@@ -90,7 +93,14 @@ public class Vd_Cp_loja_Virt_Controller {
 
 	@Autowired
 	private ServiceJunoBoleto serviceJunoBoleto;
-
+	
+	
+    @Operation(summary = "Metodo(end-point) para Salvar(realizar) uma venda(compra pelo cliente) na loja virtual", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Venda realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Venda"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/salvarVendaLoja")
 	public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVendaLoja(
@@ -175,6 +185,13 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(vendaCompraLojaVirtualDTO, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Busca dados de uma venda na loja virtual pelo Id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaVendaId/{id}")
 	public ResponseEntity<VendaCompraLojaVirtualDTO> consultaVendaId(@PathVariable("id") Long idVenda) {
@@ -190,6 +207,13 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(vendaCompraLojaVirtualDTO, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Deletar Venda pelo Id", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Venda deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Venda não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Venda"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteVendaTotalBanco/{idVenda}")
 	public ResponseEntity<String> deleteVendaTotalBanco(@PathVariable(value = "idVenda") Long idVenda) {
@@ -200,6 +224,14 @@ public class Vd_Cp_loja_Virt_Controller {
 
 	}
 
+    
+    @Operation(summary = "Deletar Venda pelo Id de forma logica, ou seja ocultando", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Venda deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Venda não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Venda"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteVendaTotalBanco2/{idVenda}")
 	public ResponseEntity<String> deleteVendaTotalBanco2(@PathVariable(value = "idVenda") Long idVenda) {
@@ -210,6 +242,13 @@ public class Vd_Cp_loja_Virt_Controller {
 
 	}
 
+    @Operation(summary = "Metodo para ativar uma venda que foi deletada logicamente(ocultada)", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ativacao de venda realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Venda não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro ao ativar venda"),
+    })
 	@ResponseBody
 	@PutMapping(value = "**/ativaRegistroVendaBanco/{idVenda}")
 	public ResponseEntity<String> ativaRegistroVendaBanco(@PathVariable(value = "idVenda") Long idVenda) {
@@ -220,6 +259,14 @@ public class Vd_Cp_loja_Virt_Controller {
 
 	}
 
+    
+	@Operation(summary = "End-point para buscar todas as vendas entre um intervalo de datas", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaVendaDinamicaFaixaData/{data1}/{data2}")
 	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> consultaVendaDinamicaFaixaData(
@@ -266,6 +313,13 @@ public class Vd_Cp_loja_Virt_Controller {
 
 	}
 
+	@Operation(summary = "Metodo(end-point) para buscar vendas e que recebe varios parametros de filtragem", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaVendaDinamica/{valor}/{tipoconsulta}")
 	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> consultaVendaDinamica(@PathVariable("valor") String valor,
@@ -323,6 +377,13 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>(vendaCompraLojaVirtualDTOList, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Buscar todas venda de um determinado cliente", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/vendaPorCliente/{idCliente}")
 	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> vendaPorCliente(@PathVariable("idCliente") Long idCliente) {
@@ -365,6 +426,14 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>(vendaCompraLojaVirtualDTOList, HttpStatus.OK);
 	}
 
+
+	@Operation(summary = "Buscar vendas de de um determinado Id de produto", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaVendaPorProdutoId/{id}")
 	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> consultaVendaPorProduto(@PathVariable("id") Long idProd) {
@@ -407,6 +476,13 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>(vendaCompraLojaVirtualDTOList, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Metodo que recebe o Id e uma descrição para cancelar uma etiqueta de transporte da API do MelhorEnvio", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/cancelaEtiqueta/{idEtiqueta}/{descricao}")
 	public ResponseEntity<String> cancelaEtiqueta(@PathVariable String idEtiqueta, @PathVariable String reason_id,
@@ -428,6 +504,13 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Metodo que recebe o Id de uma VendaCompraLojaVirtual e imprime a etiqueta da API MelhorEnvio", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/imprimeCompraEtiquetaFrete/{idVenda}")
 	public ResponseEntity<String> imprimeCompraEtiquetaFrete(@PathVariable Long idVenda)
@@ -670,6 +753,12 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<String>("Sucesso", HttpStatus.OK);
 	}
 
+    @Operation(summary = "Metodo que serve para consultar informações sobre um frete usando a API do MelhorEnvio", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar consulta"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/consultarFreteLojaVirtual")
 	public ResponseEntity<List<EmpresaTransporteDTO>> consultaFrete(
@@ -727,6 +816,12 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<List<EmpresaTransporteDTO>>(empresaTransporteDTOs, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Metodo qu recebe um ObjetoCarneJuno e a API da Juno gera um boleto e QR-Code PIX", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Boleto e Pix realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Boleto e Pix"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/gerarBoletoPix")
 	public ResponseEntity<String> gerarBoletoPix(@RequestBody @Valid ObjetoPostCarneJuno objetoPostCarneJuno)
@@ -734,7 +829,13 @@ public class Vd_Cp_loja_Virt_Controller {
 		return new ResponseEntity<String>(serviceJunoBoleto.gerarCarneApi(objetoPostCarneJuno), HttpStatus.OK);
 	}
 
-	@ResponseBody
+    @Operation(summary = "End-point(metodo) que recebe uma String code e passa para a API da Juno cancelar o boleto e QR-Code PIX", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao cancelar"),
+    })
+    @ResponseBody
 	@PostMapping(value = "**/cancelarBoletoPix")
 	public ResponseEntity<String> cancelarBoletoPix(@RequestBody @Valid String code) throws Exception {
 

@@ -19,7 +19,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 @SpringBootApplication
+@OpenAPIDefinition(info = @Info(
+		title = "Swagger OpenApi", version = "1",
+		description = "API do OpenApi ajudar na documentação do curso Loja Virtual Mentoria"))
 @EnableAsync
 @EnableScheduling
 @EntityScan(basePackages = "jdev.mentoria.lojavirtual.model")

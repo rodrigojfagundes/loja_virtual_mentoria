@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojavirtual.model.MarcaProduto;
 import jdev.mentoria.lojavirtual.repository.MarcaRepository;
@@ -27,6 +30,13 @@ public class MarcaProdutoController {
 	@Autowired
 	private MarcaRepository marcaRepository;
 
+	
+    @Operation(summary = "Realizar o cadastro da Marca de um Produto", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Marca Produto realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Marca Produto"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/salvarMarca")
 	public ResponseEntity<MarcaProduto> salvarMarca(@RequestBody @Valid MarcaProduto marcaProduto)
@@ -46,8 +56,13 @@ public class MarcaProdutoController {
 		return new ResponseEntity<MarcaProduto>(marcaProdutoSalvo, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Deletar Marca Produto", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Deletar MarcaProduto realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar ao deletar Marca Produto"),
+    })
 	@ResponseBody
-
 	@PostMapping(value = "**/deleteMarca")
 	public ResponseEntity<?> deleteMarca(
 			@RequestBody MarcaProduto marcaProduto) { /* Recebe o JSON e converte pra Objeto */
@@ -56,7 +71,15 @@ public class MarcaProdutoController {
 
 		return new ResponseEntity("Marca produto Removido", HttpStatus.OK);
 	}
-
+    
+    
+    @Operation(summary = "Deletar MarcaProduto por Id", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Marca Produto deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Marca Produto não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Marca Produto"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteMarcaPorId/{id}")
 	public ResponseEntity<?> deleteMarcaPorId(@PathVariable("id") Long id) {
@@ -66,6 +89,14 @@ public class MarcaProdutoController {
 		return new ResponseEntity("Marca Produto Removido", HttpStatus.OK);
 	}
 
+	
+    @Operation(summary = "Obter Marca Produto por Id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/obterMarcaProduto/{id}")
 	public ResponseEntity<MarcaProduto> obterMarcaProduto(@PathVariable("id") Long id) throws ExceptionMentoriaJava {
@@ -79,6 +110,14 @@ public class MarcaProdutoController {
 		return new ResponseEntity<MarcaProduto>(marcaProduto, HttpStatus.OK);
 	}
 
+    
+    @Operation(summary = "Obter MarcaProduto por descricao(nome)", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/buscarMarcaProdutoPorDesc/{desc}")
 	public ResponseEntity<List<MarcaProduto>> buscarMarcaProdutoPorDesc(@PathVariable("desc") String desc) {

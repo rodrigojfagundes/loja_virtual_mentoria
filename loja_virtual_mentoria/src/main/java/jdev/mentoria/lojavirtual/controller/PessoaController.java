@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojavirtual.enums.TipoPessoa;
 import jdev.mentoria.lojavirtual.model.Endereco;
@@ -47,6 +50,13 @@ public class PessoaController {
 	@Autowired
 	private ServiceContagemAcessoApi serviceContagemAcessoApi;
 
+    @Operation(summary = "Metodo para buscar Pessoa Fisica pelo nome", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaPfNome/{nome}")
 	public ResponseEntity<List<PessoaFisica>> consultaPfNome(@PathVariable("nome") String nome) {
@@ -58,6 +68,14 @@ public class PessoaController {
 		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
 	}
 
+    
+    @Operation(summary = "Metodo para buscar Pessoa Fisica pelo CPF", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaPfCpf/{cpf}")
 	public ResponseEntity<List<PessoaFisica>> consultaPfCpf(@PathVariable("cpf") String cpf) {
@@ -67,6 +85,13 @@ public class PessoaController {
 		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Metodo para buscar PessoaJuridica pelo Nome", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaNomePJ/{nome}")
 	public ResponseEntity<List<PessoaJuridica>> consultaNomePJ(@PathVariable("nome") String nome) {
@@ -76,6 +101,13 @@ public class PessoaController {
 		return new ResponseEntity<List<PessoaJuridica>>(pessoasJuridicas, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Metodo para buscar Pessoa Juridica pelo CNPJ", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaCnpjPJ/{cnpj}")
 	public ResponseEntity<List<PessoaJuridica>> consultaCnpjPJ(@PathVariable("cnpj") String cnpj) {
@@ -85,6 +117,13 @@ public class PessoaController {
 		return new ResponseEntity<List<PessoaJuridica>>(pessoasJuridicas, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Metodo de consulta de CEP", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaCep/{cep}")
 	public ResponseEntity<CepDTO> consultaCep(@PathVariable("cep") String cep) {
@@ -93,6 +132,13 @@ public class PessoaController {
 
 	}
 
+    @Operation(summary = "Metodo que recebe um CNPJ e verifica se ele valido", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/consultaCnpjReceitaWs/{cnpj}")
 	public ResponseEntity<ConsultaCnpjDto> consultaCnpjReceitaWs(@PathVariable("cnpj") String cnpj) {
@@ -100,7 +146,13 @@ public class PessoaController {
 		return new ResponseEntity<ConsultaCnpjDto>(pessoaUserService.consultaCnpjReceitaWS(cnpj), HttpStatus.OK);
 
 	}
-
+    
+    @Operation(summary = "Metodo para Cadastrar Pessoa Juridica(empresa)", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Pessoa Juridica(empresa) realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Pessoa Juridica(empresa)"),
+    })
 	/* end-point é microsservicos é um API */
 	@ResponseBody
 	@PostMapping(value = "**/salvarPj")
@@ -174,6 +226,13 @@ public class PessoaController {
 		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
 	}
 
+    
+    @Operation(summary = "Metodo para cadastrar Pessoa Fisica", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Pessoa Fisica realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Pessoa Fisica"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/salvarPf")
 	public ResponseEntity<PessoaFisica> salvarPf(@RequestBody PessoaFisica pessoaFisica) throws ExceptionMentoriaJava {

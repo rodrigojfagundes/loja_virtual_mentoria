@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojavirtual.model.CategoriaProduto;
 import jdev.mentoria.lojavirtual.model.dto.CatgoriaProdutoDto;
@@ -23,6 +26,15 @@ public class CategoriaProdutController {
 	@Autowired
 	private CategoriaProdutoRepository categoriaProdutoRepository;
 
+	
+	
+    @Operation(summary = "Busca Categoria de Produto por descrição(nome)", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/buscarPorDescCategoria/{desc}")
 	public ResponseEntity<List<CategoriaProduto>> buscarPorDesc(@PathVariable("desc") String desc) {
@@ -32,6 +44,12 @@ public class CategoriaProdutController {
 		return new ResponseEntity<List<CategoriaProduto>>(categoriaProduto, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Deleta Categoria de Produto", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Categoria de Produto deletado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar ao deletar Categoria de Produto"),
+    })
 	@ResponseBody /* Poder dar um retorno da API */
 	@PostMapping(value = "**/deleteCategoria") /* Mapeando a url para receber JSON */
 	public ResponseEntity<?> deleteAcesso(
@@ -46,6 +64,12 @@ public class CategoriaProdutController {
 		return new ResponseEntity("Categoria Removida", HttpStatus.OK);
 	}
 
+    @Operation(summary = "Realiza o cadastro de Categoria de Produto", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Categoria de Produto realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Categoria de Produto"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/salvarCategoria")
 	public ResponseEntity<CatgoriaProdutoDto> salvarCategoria(@RequestBody CategoriaProduto categoriaProduto)

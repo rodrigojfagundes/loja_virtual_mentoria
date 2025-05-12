@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.model.BoletoJuno;
 import jdev.mentoria.lojavirtual.model.dto.AttibutesNotificaoPagaApiJuno;
 import jdev.mentoria.lojavirtual.model.dto.DataNotificacaoApiJunotPagamento;
@@ -27,6 +29,12 @@ public class RecebePagamentoWebHookApiJuno implements Serializable {
 	@Autowired
 	private BoletoJunoRepository boletoJunoRepository;
 
+    @Operation(summary = "WebHook(end-point) que a Asaas vai passar informações quando algum pagamento for feito", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro"),
+    })
 	@ResponseBody
 	@RequestMapping(value = "/notificacaoapiasaas", consumes = {
 			"application/json;charset=UTF-8" }, headers = "Content-Type=application/json;charset=UTF-8", method = RequestMethod.POST)
@@ -56,6 +64,12 @@ public class RecebePagamentoWebHookApiJuno implements Serializable {
 				HttpStatus.OK);
 	}
 
+    @Operation(summary = "WebHook(end-point) que a Juno vai passar informações quando algum pagamento for feito", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro"),
+    })
 	@ResponseBody
 	@RequestMapping(value = "/notificacaoapiv2", consumes = {
 			"application/json;charset=UTF-8" }, headers = "Content-Type=application/json;charset=UTF-8", method = RequestMethod.POST)

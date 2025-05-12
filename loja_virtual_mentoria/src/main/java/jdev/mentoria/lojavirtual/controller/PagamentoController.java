@@ -26,6 +26,9 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.enums.ApiTokenIntegracao;
 import jdev.mentoria.lojavirtual.model.AccessTokenJunoAPI;
 import jdev.mentoria.lojavirtual.model.BoletoJuno;
@@ -69,7 +72,14 @@ public class PagamentoController implements Serializable {
 
 	@Autowired
 	private BoletoJunoRepository boletoJunoRepository;
-
+	
+	
+    @Operation(summary = "Metodo que recebe as informações do cartão e o CPF e endereço de quem esta comprando", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Dados recebidos com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao receber dados"),
+    })
 	@RequestMapping(method = RequestMethod.POST, value = "**/finalizarCompraCartao")
 	public ResponseEntity<String> finalizarCompraCartaoAsaas(
 
@@ -248,7 +258,14 @@ public class PagamentoController implements Serializable {
 		}
 
 	}
-
+    
+    @Operation(summary = "Metodo que recebe o Id de uma CompraVendaLojaVirtual e exibe as informacoes dela no pagamento.html", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@RequestMapping(method = RequestMethod.GET, value = "**/pagamento/{idVendaCompra}")
 	public ModelAndView pagamento(@PathVariable(value = "idVendaCompra", required = false) String idVendaCompra) {
 
@@ -266,6 +283,12 @@ public class PagamentoController implements Serializable {
 		return modelAndView;
 	}
 
+    @Operation(summary = "Metodo da API Juno para receber os dados do cartão e dados do comprador", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Product realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Product"),
+    })
 	@RequestMapping(method = RequestMethod.POST, value = "**/finalizarCompraCartaoJuno")
 	public ResponseEntity<String> finalizarCompraCartao(@RequestParam("cardHash") String cardHash,
 			@RequestParam("cardNumber") String cardNumber, @RequestParam("holderName") String holderName,

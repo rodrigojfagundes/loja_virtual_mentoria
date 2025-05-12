@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojavirtual.model.ContaPagar;
 import jdev.mentoria.lojavirtual.repository.ContaPagarRepository;
@@ -27,6 +30,12 @@ public class ContaPagarController {
 	@Autowired
 	private ContaPagarRepository contaPagarRepository;
 
+    @Operation(summary = "Realiza o cadastro de Conta Pagar", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Conta Pagar realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Conta Pagar"),
+    })
 	@ResponseBody /* Poder dar um retorno da API */
 	@PostMapping(value = "**/salvarContaPagar") /* Mapeando a url para receber JSON */
 	public ResponseEntity<ContaPagar> salvarAcesso(@RequestBody @Valid ContaPagar contaPagar)
@@ -57,8 +66,13 @@ public class ContaPagarController {
 		return new ResponseEntity<ContaPagar>(contaPagarSalva, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Deletar Conta a Pagar", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Deletar Conta Pagar realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao Deletar Conta Pagar"),
+    })
 	@ResponseBody
-
 	@PostMapping(value = "**/deleteContaPagar")
 	public ResponseEntity<String> deleteContaPagar(
 			@RequestBody ContaPagar contaPagar) { /* Recebe o JSON e converte pra Objeto */
@@ -68,6 +82,13 @@ public class ContaPagarController {
 		return new ResponseEntity<String>("Conta Pagar Removida", HttpStatus.OK);
 	}
 
+    @Operation(summary = "Deletar Conta Pagar", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Conta Pagar deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Conta Pagar não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Conta Pagar"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteContaPagarPorId/{id}")
 	public ResponseEntity<String> deleteContaPagarPorId(@PathVariable("id") Long id) {
@@ -77,6 +98,14 @@ public class ContaPagarController {
 		return new ResponseEntity<String>("ContaPagar Removido", HttpStatus.OK);
 	}
 
+    
+    @Operation(summary = "Busca dados de Conta Pagar por Id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/obterContaPagar/{id}")
 	public ResponseEntity<ContaPagar> obterContaPagar(@PathVariable("id") Long id) throws ExceptionMentoriaJava {
@@ -90,6 +119,13 @@ public class ContaPagarController {
 		return new ResponseEntity<ContaPagar>(contaPagar, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Busca dados de Conta Pagar por descrição(nome)", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/buscarContaPagarDesc/{desc}")
 	public ResponseEntity<List<ContaPagar>> buscarContaPagarDesc(@PathVariable("desc") String desc) {

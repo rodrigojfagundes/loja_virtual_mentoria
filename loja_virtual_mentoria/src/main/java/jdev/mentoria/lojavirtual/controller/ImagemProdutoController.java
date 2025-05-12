@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.model.ImagemProduto;
 import jdev.mentoria.lojavirtual.model.dto.ImagemProdutoDTO;
 import jdev.mentoria.lojavirtual.repository.ImagemProdutoRepository;
@@ -24,6 +27,12 @@ public class ImagemProdutoController {
 	@Autowired
 	private ImagemProdutoRepository imagemProdutoRepository;
 
+    @Operation(summary = "Realiza o cadastro de Imagem de Produto", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Imagem de Produtp realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Imagem de Produto"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/salvarImagemProduto")
 	public ResponseEntity<ImagemProdutoDTO> salvarImagemProduto(@RequestBody ImagemProduto imagemProduto) {
@@ -50,6 +59,13 @@ public class ImagemProdutoController {
 		return new ResponseEntity<String>("Imagems do produto removida", HttpStatus.OK);
 	}
 
+    @Operation(summary = "Delete Imagem de Produto", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Imagem de Produto deletada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Imagem de Produto não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Imagem de Produto"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteImagemObjeto")
 	public ResponseEntity<?> deleteImagemProdutoPorId(@RequestBody ImagemProduto imagemProduto) {
@@ -64,6 +80,13 @@ public class ImagemProdutoController {
 		return new ResponseEntity<String>("Imagem removida", HttpStatus.OK);
 	}
 
+    @Operation(summary = "Deleta imagem de produto por Id", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Imagem de Produto deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Imagem de Produto não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Imagme de Produto"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteImagemProdutoPorId/{id}")
 	public ResponseEntity<?> deleteImagemProdutoPorId(@PathVariable("id") Long id) {
@@ -77,6 +100,15 @@ public class ImagemProdutoController {
 		return new ResponseEntity<String>("Imagem removida", HttpStatus.OK);
 	}
 
+    
+    
+    @Operation(summary = "Busca Imagem de Produto por Id do Produto", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/obterImagemPorProduto/{idProduto}")
 	public ResponseEntity<List<ImagemProdutoDTO>> obterImagemPorProduto(@PathVariable("idProduto") Long idProduto) {

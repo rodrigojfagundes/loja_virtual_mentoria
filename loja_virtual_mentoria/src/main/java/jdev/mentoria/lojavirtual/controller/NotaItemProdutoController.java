@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojavirtual.model.NotaItemProduto;
 import jdev.mentoria.lojavirtual.repository.NotaItemProdutoRepository;
@@ -24,6 +27,12 @@ public class NotaItemProdutoController {
 	@Autowired
 	private NotaItemProdutoRepository notaItemProdutoRepository;
 
+    @Operation(summary = "Cadastrando a Nota Fiscal de um Produto", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro Nota Fiscal de Produto"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/salvarNotaItemProduto")
 	public ResponseEntity<NotaItemProduto> salvarNotaItemProduto(@RequestBody @Valid NotaItemProduto notaItemProduto)
@@ -64,6 +73,13 @@ public class NotaItemProdutoController {
 
 	}
 
+    @Operation(summary = "Deletando Nota Item Produto por Id", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Nota Item Produto deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Nota Item Produto não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Nota Item Produto"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteNotaItemPorId/{id}")
 	public ResponseEntity<?> deleteNotaItemPorId(@PathVariable("id") Long id) {

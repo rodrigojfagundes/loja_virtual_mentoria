@@ -24,10 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
-import jdev.mentoria.lojavirtual.model.Acesso;
 import jdev.mentoria.lojavirtual.model.Produto;
-import jdev.mentoria.lojavirtual.repository.AcessoRepository;
 import jdev.mentoria.lojavirtual.repository.ProdutoRepository;
 import jdev.mentoria.lojavirtual.service.AcessoService;
 import jdev.mentoria.lojavirtual.service.ServiceSendEmail;
@@ -45,9 +46,14 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 
+    @Operation(summary = "Metodo para cadastrar um produto", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de Produto realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de Produto"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/salvarProduto")
-
 	public ResponseEntity<Produto> salvarProduto(@RequestBody @Valid Produto produto)
 			throws ExceptionMentoriaJava, MessagingException, IOException {
 
@@ -163,6 +169,13 @@ public class ProdutoController {
 
 	}
 
+    
+    @Operation(summary = "Metodo que deleta um produto", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Produto deletado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o deleção de Produto"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/deleteProduto")
 	public ResponseEntity<String> deleteProduto(@RequestBody Produto produto) {
@@ -172,6 +185,13 @@ public class ProdutoController {
 
 	}
 
+    @Operation(summary = "Deletar Produto por Id", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Produto deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Produto"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteProdutoPorId/{id}")
 	public ResponseEntity<String> deleteProdutoPorId(@PathVariable("id") Long id) {
@@ -181,6 +201,13 @@ public class ProdutoController {
 
 	}
 
+    @Operation(summary = "Busca Produtos por Id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/obterProduto/{id}")
 	public ResponseEntity<Produto> obterProduto(@PathVariable("id") Long id) throws ExceptionMentoriaJava {
@@ -195,6 +222,13 @@ public class ProdutoController {
 
 	}
 
+    @Operation(summary = "Busca Produtos por descrição(nome)", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/buscarProdNome/{nome}")
 	public ResponseEntity<List<Produto>> buscarProdNome(@PathVariable("nome") String nome) {

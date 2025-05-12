@@ -36,11 +36,15 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 				.permitAll()
 				.antMatchers(HttpMethod.POST, "/requisicaojunoboleto/**", "/notificacaoapiv2", "/notificacaoapiasaas",
 						"/pagamento/**", "/resources/**", "/static/**", "/templates/**", "classpath:/static/**",
-						"classpath:/resources/**", "classpath:/templates/**")
+						"classpath:/resources/**", "classpath:/templates/**",
+						"**/requisicaojunoboleto/notificacaoapiasaas", "/v3/api-docs/**", "/configuration/ui",
+						"/swagger-resources/**", "configuration/**", "/swagger-ui/**")
 				.permitAll()
 				.antMatchers(HttpMethod.GET, "/requisicaojunoboleto/**", "/notificacaoapiv2", "/notificacaoapiasaas",
 						"/pagamento/**", "/resources/**", "/static/**", "/templates/**", "classpath:/static/**",
-						"classpath:/resources/**", "classpath:/templates/**")
+						"classpath:/resources/**", "classpath:/templates/**",
+						"**/requisicaojunoboleto/notificacaoapiasaas", "/v3/api-docs/**", "/configuration/ui",
+						"/swagger-resources/**", "configuration/**", "/swagger-ui/**")
 				.permitAll().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
 				.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")
@@ -67,11 +71,13 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 				.antMatchers(HttpMethod.GET, "/requisicaojunoboleto/**", "/notificacaoapiv2", "/notificacaoapiasaas",
 						"/pagamento/**", "/resources/**", "/static/**", "/templates/**", "classpath:/static/**",
 						"classpath:/resources/**", "classpath:/templates/**", "/webjars/**",
-						"/WEB-INF/classes/static/**")
+						"/WEB-INF/classes/static/**", "**/requisicaojunoboleto/notificacaoapiasaas", "/v3/api-docs/**",
+						"/configuration/ui", "/swagger-resources/**", "configuration/**", "/swagger-ui/**")
 				.antMatchers(HttpMethod.POST, "/requisicaojunoboleto/**", "/notificacaoapiv2", "/notificacaoapiasaas",
 						"/pagamento/**", "/resources/**", "/static/**", "/templates/**", "classpath:/static/**",
 						"classpath:/resources/**", "classpath:/templates/**", "/webjars/**",
-						"/WEB-INF/classes/static/**");
+						"/WEB-INF/classes/static/**", "**/requisicaojunoboleto/notificacaoapiasaas", "/v3/api-docs/**",
+						"/configuration/ui", "/swagger-resources/**", "configuration/**", "/swagger-ui/**");
 		/* Ingnorando URL no momento para nao autenticar */
 	}
 

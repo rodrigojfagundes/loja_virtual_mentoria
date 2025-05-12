@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jdev.mentoria.lojavirtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojavirtual.model.Acesso;
 import jdev.mentoria.lojavirtual.repository.AcessoRepository;
@@ -29,6 +32,12 @@ public class AcessoController {
 	@Autowired
 	private AcessoRepository acessoRepository;
 
+	@Operation(summary = "Realiza o cadastro de um acesso(role)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro de acesso realizado com sucesso"),  
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro de acesso"),
+    })
 	@ResponseBody
 	@PostMapping(value = "**/salvarAcesso")
 	public ResponseEntity<Acesso> salvarAcesso(@RequestBody Acesso acesso)
@@ -47,6 +56,14 @@ public class AcessoController {
 		return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.OK);
 	}
 
+	
+    @Operation(summary = "Deletar acesso(role)", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Acesso deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Acesso não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Acesso"),
+    })
 	@ResponseBody /* Poder dar um retorno da API */
 	@PostMapping(value = "**/deleteAcesso") /* Mapeando a url para receber JSON */
 	public ResponseEntity<?> deleteAcesso(@RequestBody Acesso acesso) { /* Recebe o JSON e converte pra Objeto */
@@ -56,6 +73,13 @@ public class AcessoController {
 		return new ResponseEntity("Acesso Removido", HttpStatus.OK);
 	}
 
+    @Operation(summary = "Deletar acesso(role)", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Acesso deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Acesso não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar Acesso"),
+    })
 	@ResponseBody
 	@DeleteMapping(value = "**/deleteAcessoPorId/{id}")
 	public ResponseEntity<?> deleteAcessoPorId(@PathVariable("id") Long id) {
@@ -65,6 +89,13 @@ public class AcessoController {
 		return new ResponseEntity("Acesso Removido", HttpStatus.OK);
 	}
 
+    @Operation(summary = "Busca dados de Acesso(role) por Id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/obterAcesso/{id}")
 	public ResponseEntity<Acesso> obterAcesso(@PathVariable("id") Long id) throws ExceptionMentoriaJava {
@@ -78,6 +109,13 @@ public class AcessoController {
 		return new ResponseEntity<Acesso>(acesso, HttpStatus.OK);
 	}
 
+    @Operation(summary = "Busca dados de acesso(role) por descricao(nome)", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados"),
+    })
 	@ResponseBody
 	@GetMapping(value = "**/buscarPorDesc/{desc}")
 	public ResponseEntity<List<Acesso>> buscarPorDesc(@PathVariable("desc") String desc) {
